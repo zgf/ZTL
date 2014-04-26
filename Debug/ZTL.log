@@ -1,0 +1,20 @@
+﻿生成启动时间为 4/26/2014 10:47:58 PM。
+     1>项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>f:\myprojects\ztl\ztl\z_concept.h(12): error C2143: 语法错误 : 缺少“;”(在“&”的前面)
+                 f:\myprojects\ztl\ztl\z_concept.h(13): 参见对正在编译的类 模板 实例化“ztl::concept::base_concept::IAssignable<DerivedType>”的引用
+     1>f:\myprojects\ztl\ztl\z_concept.h(12): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>f:\myprojects\ztl\ztl\z_concept.h(12): error C2143: 语法错误 : 缺少“,”(在“&”的前面)
+     1>f:\myprojects\ztl\ztl\main.cpp(16): error C2039: “Test”: 不是“ztl::concept::base_concept”的成员
+     1>f:\myprojects\ztl\ztl\main.cpp(16): error C2065: “Test”: 未声明的标识符
+     1>f:\myprojects\ztl\ztl\main.cpp(16): error C2062: 意外的类型“int”
+     1>f:\myprojects\ztl\ztl\main.cpp(17): error C2039: “Test”: 不是“ztl::concept::base_concept”的成员
+     1>f:\myprojects\ztl\ztl\main.cpp(17): error C2065: “Test”: 未声明的标识符
+     1>f:\myprojects\ztl\ztl\main.cpp(17): error C2062: 意外的类型“int”
+     1>已完成生成项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”(Build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:00.70
