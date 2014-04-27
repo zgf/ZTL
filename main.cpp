@@ -3,6 +3,8 @@
 #include <iostream>
 #include <memory>
 #include "Z_Concept.h"
+#include <map>
+#include <hash_map> 
 //约定 类型名 pascal式
 // 类成员 驼峰式+前缀后缀
 // 变量名 驼峰式+前缀后缀
@@ -13,9 +15,7 @@
 
 int main()
 {
-	ztl::concept::base_concept::Test<int> TestA;
-	ztl::concept::base_concept::Test<int> TestB;
-
+	std::hash_map<int,int>;
 	//std::string a;
 	//ztl::Nullable<int*> test(new int(3));
 	//ztl::Nullable<std::vector<int>> testb(ztl::null);
