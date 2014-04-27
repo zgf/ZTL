@@ -164,12 +164,12 @@ namespace ztl
 				typename PointerType,typename ConstPointerType,
 				typename IteratorType,typename ConstIteratorType,
 				typename DifferentType,typename SzieType>
-			class IForwardContainer :public
-			virtual base_concept::IAssignable<IForwardContainer<DerivedType, ValueType,
+			class IContainer :public
+			virtual base_concept::IAssignable<IContainer<DerivedType, ValueType,
 					ReferenceType, ConstReferenceType, PointerType, ConstPointerType,
 					IteratorType, ConstIteratorType,
 					DifferentType, SzieType >> , 
-			virtual base_concept::IEquality <IForwardContainer <DerivedType, ValueType,
+			virtual base_concept::IEquality <IContainer <DerivedType, ValueType,
 					 ReferenceType, ConstReferenceType, PointerType, ConstPointerType,
 					IteratorType, ConstIteratorType,
 					DifferentType, SzieType >>
@@ -248,9 +248,6 @@ namespace ztl
 				IteratorType						find(const key_type& key);
 				SizeType							count(const key_type& key);
 				pair<IteratorType, IteratorType>	equal_range(const key_type& key);
-				IteratorType						insert(const ValueType& Val);
-				template<typename InputIterator>
-				IteratorType						insert(InputIterator& start, InputIterator& end);
 				void								erase(const key_type&key);
 				IteratorType						erase(IteratorType& start, IteratorType& end);
 			};
@@ -270,13 +267,13 @@ namespace ztl
 				template<typename InputIterator>
 				void						insert(InputIterator& start, InputIterator& end);
 			};
-			template<typename KeyType, typename IteratorType, typename ValueType>
+			template<typename KeyType, typename IteratorType, typename ValueType = KeyType>
 			class ISimple
 			{
 			public:
-				
+				//Key 和Value是同一个
 			};
-			template<typename KeyType, typename IteratorType, typename ValueType = pair<const KeyType,ValueType>,typename MapType>
+			template<typename KeyType, typename IteratorType, typename MapType, typename ValueType = pair<const KeyType, MapType>>
 			class IPair
 			{
 			public:
@@ -294,17 +291,17 @@ namespace ztl
 				IteratorType			lower_bound(const KeyType& key)		const;
 				IteratorType			uppper_bound(const KeyType& key)	const;
 			};
-			template<typename HasherType, typename KeyCompare,typename SizeType>
+			template<typename HasherType, typename KeyCompare, typename SizeType, typename KeyType>
 			class IHash
 			{
 			public:
 				typedef KeyCompare key_compare;
 				typedef HasherType hasher;
 			public:
-				hasher hash_func()const;
-				void resize();
-				key_compare key_comp()const;
-				SizeType bucket_count()const;
+				hasher					hash_func()		const;
+				void					resize()			 ;
+				key_compare				key_comp()		const;
+				SizeType				bucket_count()	const;
 			};
 		}
 	}

@@ -15,7 +15,7 @@
 
 int main()
 {
-	std::hash_map<int,int>;
+	
 	//std::string a;
 	//ztl::Nullable<int*> test(new int(3));
 	//ztl::Nullable<std::vector<int>> testb(ztl::null);
