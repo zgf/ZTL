@@ -10,7 +10,8 @@ namespace ztl
 		{
 			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
 			class IIterator :
-				public concept_base::IEquality<IteratorType>, concept_base::IAssignable<IteratorType>
+				/*public concept_base::IEquality<IteratorType>, */
+			/*public  concept_base::IAssignable<IteratorType>*/
 			{
 			public:
 				typedef ValueType				value_type;
@@ -26,7 +27,7 @@ namespace ztl
 					return &*this;
 				}
 			};
-			template<typename IteratorType, typename ValueType, typename PointerType, typename ReferenceType, typename DifferentType, typename IteratorCategory>
+			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
 			class IInputIterator :
 				public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>
 			{
@@ -40,7 +41,7 @@ namespace ztl
 				}
 			};
 
-			template<typename IteratorType, typename ValueType, typename PointerType, typename ReferenceType, typename DifferentType, typename IteratorCategory>
+			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
 			class IOutputIterator :
 				public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>
 			{
@@ -53,9 +54,11 @@ namespace ztl
 				}
 			};
 
-			template<typename IteratorType, typename ValueType, typename PointerType, typename ReferenceType, typename DifferentType, typename IteratorCategory>
+			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
 			class IForwardIterator :
-				public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>
+				public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>,
+				public virtual IEquality<IteratorType>
+				public virtual concept_base::IAssignable<IteratorType>;
 			{
 			public:
 				IteratorType& operator++();
@@ -67,9 +70,9 @@ namespace ztl
 					return std::move(temp);
 				}
 			};
-			template<typename IteratorType, typename ValueType, typename PointerType, typename ReferenceType, typename DifferentType, typename IteratorCategory>
+			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
 			class IBidrectionalIterator :
-				public IForwardIterator< IteratorType, ValueType, PointerType, ReferenceType, DifferentType, IteratorCategory>
+				public IForwardIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>
 			{
 			public:
 				IteratorType& operator--();
@@ -81,9 +84,9 @@ namespace ztl
 					return std::move(temp);
 				}
 			};
-			template<typename IteratorType, typename ValueType, typename PointerType, typename ReferenceType, typename DifferentType, typename IteratorCategory>
+			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
 			class IRandomAcessIterator :
-				public IBidrectionalIterator< IteratorType, ValueType, PointerType, ReferenceType, DifferentType, IteratorCategory>,
+				public IBidrectionalIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>,
 				concept_base::IOrdering<IteratorType>
 			{
 			public:

@@ -2,6 +2,7 @@
 #include <list>
 #include <iostream>
 #include <algorithm>
+#include <iterator>
 #include <vector>
 #include "ztl_concept.h"
 #include "ztl_type_traits.h"
@@ -109,9 +110,7 @@
 
 int main()
 {
-	int a = 0;
-	std::reverse_iterator
-	//std::front_inserter
+	istream
 	//std::string a;
 	//ztl::Nullable<int*> test(new int(3));
 	//ztl::Nullable<std::vector<int>> testb(ztl::null);

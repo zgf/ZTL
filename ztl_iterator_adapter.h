@@ -9,7 +9,7 @@ namespace ztl
 		{
 			template<typename FrontInsertContainer>
 			class front_insert_iterator :
-				public virtual ztl::concept::concept_iterator::IOutputIterator<front_insert_iterator<FrontInsertContainer>, void, void, void, void, ztl::traits::iterator_traits::output_iterator>
+				public virtual ztl::concept::concept_iterator::IOutputIterator<front_insert_iterator<FrontInsertContainer>, void, ztl::traits::iterator_traits::output_iterator, void, void, void>
 			{
 			public:
 				typedef FrontInsertContainer							container_type;
@@ -20,7 +20,7 @@ namespace ztl
 				container_pointer containerPtr;
 			public:
 				front_insert_iterator() = delete;
-				explicit front_insert_iterator(FrontInsertContainer& target) :containerPtr(&target)
+				explicit front_insert_iterator(container_type& target) :containerPtr(&target)
 				{
 
 
@@ -50,10 +50,15 @@ namespace ztl
 				那么对于目的迭代器的=运算符重载.给予插入语义.对于用户来说,肯定没法直接修改库提供的迭代器的=语义.但是可以通过
 				加入一个间接层来解决.直接用这个iterator_apdater就搞定了.
 				*/
+			public:
+				static mySelf make_front_insert_iterator(container_type& target)
+				{
+					return std::move(mySelf(target));
+				}
 			};
 			template<typename BackInsertContainer>
 			class back_insert_iterator :
-				public virtual ztl::concept::concept_iterator::IOutputIterator<back_insert_iterator<BackInsertContainer>, void, void, void, void, ztl::traits::iterator_traits::output_iterator>
+				public virtual ztl::concept::concept_iterator::IOutputIterator<back_insert_iterator<BackInsertContainer>, void, ztl::traits::iterator_traits::output_iterator, void, void, void>
 			{
 			public:
 				typedef BackInsertContainer									container_type;
@@ -87,11 +92,15 @@ namespace ztl
 					containerPtr->push_back(std::forward<value_type>(Val));
 					return *this;
 				}
-
+			public:
+				static mySelf make_back_insert_iterator(container_type& target)
+				{
+					return std::move(mySelf(target));
+				}
 			};
 			template<typename InsertContainer>
 			class insert_iterator :
-				public virtual ztl::concept::concept_iterator::IOutputIterator<insert_iterator<InsertContainer>, void, void, void, void, ztl::traits::iterator_traits::output_iterator>
+				public virtual ztl::concept::concept_iterator::IOutputIterator<insert_iterator<InsertContainer>, void, ztl::traits::iterator_traits::output_iterator, void, void, void>,
 			{
 			public:
 				typedef InsertContainer									container_type;
@@ -129,6 +138,11 @@ namespace ztl
 					++iter;
 					return *this;
 				}
+			public:/*self*/
+				static mySelf make__insert_iterator(container_type& targetContainer, iterator_type& targetIterator)
+				{
+					return std::move(mySelf(targetContainer,targetIterator));
+				}
 			};
 			template<typename BidirectionalIterator,
 				typename IteratorCategory =
@@ -143,10 +157,11 @@ namespace ztl
 				public virtual ztl::concept::concept_iterator::IRandomAcessIterator<
 				reverse_iterator<BidirectionalIterator, IteratorCategory>,
 				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::value_type,
-				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::pointer_type,
-				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::reference_type,
+				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category,
 				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::different_type,
-				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category>
+				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::pointer_type,
+				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::reference_type
+				>
 			{
 			public:
 				typedef reverse_iterator<BidirectionalIterator, IteratorCategory>					mySelf;
@@ -164,13 +179,22 @@ namespace ztl
 				{
 				}
 
-				reverse_iterator(mySelf& target) :iterator(target)
+				reverse_iterator(mySelf& target) :iterator(target.iterator)
+				{
+
+				}
+				explicit reverse_iterator(iterator_type&target) :iterator(target)
 				{
 
 				}
 				mySelf&operator=(const mySelf& target)
 				{
 					iterator = target.base();
+					return *this;
+				}
+				mySelf&operator=(iterator_type& target)
+				{
+					iterator = target;
 					return *this;
 				}
 				~reverse_iterator()
@@ -220,6 +244,223 @@ namespace ztl
 				iterator_type base()const 
 				{
 					return iterator;
+				}
+				static mySelf make_reverse_iterator(iterator_type&target)
+				{
+					return std::move(mySelf(target));
+				}
+			};
+			template<typename ElementType,typename CharType = char,typename CharTraits=std::char_traits<CharType>>
+			class istream_iterator:
+				public virtual ztl::concept::concept_iterator::IInputIterator<
+					istream_iterator<ElementType>,ElementType,ztl::traits::iterator_traits::input_iterator>,
+				public virtual ztl::concept::concept_base::IEquality<
+					istream_iterator<ElementType>, CharType, CharTraits>
+			{
+			public:
+				typedef ElementType												element_type;
+				typedef CharType												char_type;
+				typedef CharTraits												traits_type;
+				typedef istream_iterator<element_type, char_type,traits_type>	mySelf;
+				
+				//这块以后换成自己的流=.=mark
+				typedef basic_istream<char_type, traits_type> istream_type;
+			public:
+				istream_type* streamPtr;
+				element_type val;
+			public:	
+				mySelf() :streamPtr(nullptr), val(element_type())
+				{
+
+				}
+				mySelf(istream_type& target) :streamPtr(&target)
+				{
+					get_val();
+				}
+				
+				mySelf& operator=(istream_type& target)
+				{
+					streamPtr = &target;
+					get_val();
+				}
+				~istream_iterator()
+				{
+
+				}
+			public:	/*IInputIterator*/
+				reference_type			operator*()
+				{
+					return val;
+				}
+				mySelf&					operator++()
+				{
+					get_val();
+					return *this;
+				}
+			public:	/*IEquality*/
+				bool operator==(const mySelf& right)
+				{
+					return this.streamPtr == right.streamPtr;
+				}
+			protected:/*self*/
+				void get_val()
+				{
+					/*这里很有意思,如果指针指向了一个流,并且从流中获取值为0,那么就将streamPtr设置为空,iterator end都是nullptr,这样就形成了一个有效的range*/
+					if(streamPtr != 0 && !(*streamPtr >> val))
+					{
+						streamPtr = nullptr;
+					}	
+				}
+			};
+			template<typename ElementType, typename CharType = char, typename CharTraits = std::char_traits<CharType>>
+			class ostream_iterator :
+				public virtual ztl::concept::concept_iterator::IOutputIterator<
+	ostream_iterator<ElementType,CharType,CharTraits>,void,ztl::traits::iterator_traits::output_iterator,void,void,void>
+			{
+			public:
+				typedef ElementType											 element_type;
+				typedef CharType											 char_type;
+				typedef CharTraits											 traits_type;
+				typedef ostream_iterator<element_type,char_type,traits_type> mySelf;
+				//这块以后换成自己的流=.=mark
+				typedef basic_ostream<char_type, traits_type> ostream_type;
+			public:
+				ostream_type*						streamPtr;
+				const char_type*					delim;
+			public:
+				mySelf() = delete;
+				mySelf(ostream_type& target, const char_type* tdelim = nullptr) 
+					:streamPtr(&target), delim(tdelim)
+				{
+
+				}
+
+				mySelf& operator=(const element_type& target)
+				{
+					*streamPtr << target;
+					if (delim != nullptr)
+					{
+						*streamPtr << delim;
+					}
+					return *this;
+				}
+				~ostream_iterator()
+				{
+
+				}
+			public:
+				mySelf& operator*()
+				{
+					return *this;
+				}
+				mySelf& operator++()
+				{
+					return*this;
+				}
+
+			};
+			template<typename BidirectionalIterator,
+				typename IteratorCategory =
+				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category>
+			class move_iterator :
+				public virtual ztl::concept::concept_base::IEquality <
+				move_iterator < BidirectionalIterator, IteratorCategory >> ,
+				public virtual ztl::concept::concept_base::IAssignable <
+				move_iterator < BidirectionalIterator, IteratorCategory >> ,
+				public virtual ztl::concept::concept_base::IOrdering <
+				move_iterator < BidirectionalIterator, IteratorCategory >> ,
+				public virtual ztl::concept::concept_iterator::IRandomAcessIterator<
+				move_iterator<BidirectionalIterator, IteratorCategory>,
+				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::value_type,
+				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category,
+				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::different_type,
+				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::pointer_type,
+				typename ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::reference_type
+				>
+			{
+			public:
+				typedef move_iterator<BidirectionalIterator, IteratorCategory>					mySelf;
+				typedef BidirectionalIterator														iterator_type;
+				typedef typename ztl::traits::iterator_traits::iterator_traits<iterator_type>::value_type			value_type;
+				typedef typename ztl::traits::iterator_traits::iterator_traits<iterator_type>::pointer_type			pointer_type;
+				typedef typename ztl::traits::iterator_traits::iterator_traits<iterator_type>::reference_type		reference_type;
+				typedef typename ztl::traits::iterator_traits::iterator_traits<iterator_type>::different_type		different_type;
+				typedef typename ztl::traits::iterator_traits::iterator_traits<iterator_type>::iterator_category	iterator_category;
+
+			public:
+				iterator_type iterator;
+			public:/*IAssignable*/
+				move_iterator()
+				{
+				}
+				move_iterator(iterator_type& target) :iterator(target)
+				{
+
+				}
+				move_iterator(mySelf& target) :iterator(target.iterator)
+				{
+
+				}
+				mySelf&operator=(const mySelf& target)
+				{
+					iterator = target.base();
+					return *this;
+				}
+				mySelf&operator=(iterator_type& target)
+				{
+					iterator = target;
+					return *this;
+				}
+				~move_iterator()
+				{
+
+				}
+			public: /*IEquality*/
+				bool					operator==(const mySelf& right) const
+				{
+					return iterator == right.iterator;
+				}
+			public:/*IOrdering*/
+				bool					operator<(const mySelf& right)const
+				{
+					return iterator < right.iterator;
+				}
+			public: /*IIterator*/
+				reference_type			operator*()
+				{
+					return std::move(*iterator);
+				}
+			public:/*IForwardIterator*/
+				mySelf&					operator++()
+				{
+					++iterator;
+					return *this;
+				}
+			public: /*IBidrectionalIterator*/
+				mySelf&					operator--()
+				{
+					--iterator;
+					return *this;
+				}
+			public:	/*IRandomAcessIterator*/
+				mySelf&					operator+=(const different_type n)
+				{
+					iterator += n;
+					return *this;
+				}
+				mySelf&					operator-=(const different_type n)
+				{
+					iterator -= n;
+					return *this;
+				}
+			public:/*Self*/
+				iterator_type base()const
+				{
+					return iterator;
+				}
+				static mySelf& make_move_iterator(iterator_type& target)
+				{
+					return std::move(mySelf(target));
 				}
 			};
 		}
