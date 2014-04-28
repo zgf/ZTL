@@ -78,13 +78,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Z_Concept.h" />
+    <ClInclude Include="ztl_iterator_adapter.h" />
+    <ClInclude Include="ztl_concept.h" />
     <ClInclude Include="Z_Allocetor.h" />
-    <ClInclude Include="Z_Contract.h" />
+    <ClInclude Include="ztl_concept_base.h" />
+    <ClInclude Include="ztl_Contract.h" />
     <ClInclude Include="Z_Exception.h" />
     <ClInclude Include="Z_Nullable.h" />
     <ClInclude Include="Z_String.h" />
-    <ClInclude Include="Z_TypeTraits.h" />
+    <ClInclude Include="ztl_type_traits.h" />
+    <ClInclude Include="ztl_wrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

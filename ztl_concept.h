@@ -1,63 +1,16 @@
+#pragma once
+#include "ztl_concept_base.h"
+#include "ztl_wrapper.h"
 namespace ztl
 {
 	namespace concept
 	{
-		namespace base_concept
-		{
-			template<typename DerivedType>
-			class IAssignable
-			{
-			public:
-				DerivedType& operator=(const DerivedType& target);
-			};
 		
-			template<typename DerivedType>
-			class IEquality
-			{
-			public:
-				friend bool operator== (const DerivedType& left, const DerivedType& right);
-			public:
-				friend bool operator!= (const DerivedType& left, const DerivedType& right)
-				{
-					return !left == right;
-				}
-			};
-			template<typename DerivedType>
-			class IOrdering
-			{
-			public:
-				friend bool operator<  (const DerivedType& left, const DerivedType& right);
-			public:
-				friend bool operator<= (const DerivedType& left, const DerivedType& right)
-				{
-					return !left < right;
-				}
-				friend bool operator>(const DerivedType& left, const DerivedType& right)
-				{
-					return right < left;
-				}
-				friend bool operator>= (const DerivedType& left, const DerivedType& right)
-				{
-					return !right < left;
-				}
-			};
-		/*template<typename Type>
-		class Test:public IAssignable<Test<Type>>
-		{
-		public:
-			Type a;
-			Test& operator=(Test& target)
-			{
-				a = 3;
-				return target;
-			}
-		};*/
-		}
-		namespace iterator_concept
+		namespace concept_iterator
 		{
 			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
 			class IIterator :
-				public base_concept::IEquality<IteratorType>, base_concept::IAssignable<IteratorType>
+				public concept_base::IEquality<IteratorType>, concept_base::IAssignable<IteratorType>
 			{
 			public:
 				typedef ValueType				value_type;
@@ -74,7 +27,8 @@ namespace ztl
 				}
 			};
 			template<typename IteratorType, typename ValueType, typename PointerType, typename ReferenceType, typename DifferentType, typename IteratorCategory>
-			class IInputIterator :public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>
+			class IInputIterator :
+				public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>
 			{
 			public:
 
@@ -87,7 +41,8 @@ namespace ztl
 			};
 
 			template<typename IteratorType, typename ValueType, typename PointerType, typename ReferenceType, typename DifferentType, typename IteratorCategory>
-			class IOutputIterator :public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>
+			class IOutputIterator :
+				public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>
 			{
 			public:
 				IteratorType& operator++();
@@ -99,7 +54,8 @@ namespace ztl
 			};
 
 			template<typename IteratorType, typename ValueType, typename PointerType, typename ReferenceType, typename DifferentType, typename IteratorCategory>
-			class IForwardIterator :public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>
+			class IForwardIterator :
+				public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>
 			{
 			public:
 				IteratorType& operator++();
@@ -112,7 +68,8 @@ namespace ztl
 				}
 			};
 			template<typename IteratorType, typename ValueType, typename PointerType, typename ReferenceType, typename DifferentType, typename IteratorCategory>
-			class IBidrectionalIterator :public IForwardIterator< IteratorType, ValueType, PointerType, ReferenceType, DifferentType, IteratorCategory>
+			class IBidrectionalIterator :
+				public IForwardIterator< IteratorType, ValueType, PointerType, ReferenceType, DifferentType, IteratorCategory>
 			{
 			public:
 				IteratorType& operator--();
@@ -127,7 +84,7 @@ namespace ztl
 			template<typename IteratorType, typename ValueType, typename PointerType, typename ReferenceType, typename DifferentType, typename IteratorCategory>
 			class IRandomAcessIterator :
 				public IBidrectionalIterator< IteratorType, ValueType, PointerType, ReferenceType, DifferentType, IteratorCategory>,
-				base_concept::IOrdering<IteratorType>
+				concept_base::IOrdering<IteratorType>
 			{
 			public:
 				IteratorType&		operator+=(const different_type n);
@@ -164,12 +121,12 @@ namespace ztl
 				typename PointerType,typename ConstPointerType,
 				typename IteratorType,typename ConstIteratorType,
 				typename DifferentType,typename SzieType>
-			class IContainer :public
-			virtual base_concept::IAssignable<IContainer<DerivedType, ValueType,
+			class IContainer :
+			public virtual concept_base::IAssignable<IContainer<DerivedType, ValueType,
 					ReferenceType, ConstReferenceType, PointerType, ConstPointerType,
 					IteratorType, ConstIteratorType,
 					DifferentType, SzieType >> , 
-			virtual base_concept::IEquality <IContainer <DerivedType, ValueType,
+			public virtual concept_base::IEquality <IContainer <DerivedType, ValueType,
 					 ReferenceType, ConstReferenceType, PointerType, ConstPointerType,
 					IteratorType, ConstIteratorType,
 					DifferentType, SzieType >>
@@ -206,11 +163,11 @@ namespace ztl
 				const_reverse_iterator&		rcbegin()	const;
 				const_reverse_iterator&		rcend()		const;
 			};
-			template<typename IteratorType>
+			template<typename IteratorType,typename SizeType>
 			class IRandomAccess
 			{
 				public:
-					iterator_type& operator[](size_type n);
+					IteratorType& operator[](const SizeType n);
 			};
 			template<typename ValueType, typename IteratorType, typename DifferentType, typename ReferenceType>
 			class ISequence
@@ -239,45 +196,48 @@ namespace ztl
 				void			push_back()			 ;
 				void			pop_back()			 ;
 			};
-			template<typename KeyType,typename IteratorType,typename SizeType,typename ValueType>
+			template<typename KeyType,typename IteratorType,typename SizeType>
 			class IAssociate
 			{
+
 			public:
-				typedef KeyType key_type;
-			public:
-				IteratorType						find(const key_type& key);
-				SizeType							count(const key_type& key);
-				pair<IteratorType, IteratorType>	equal_range(const key_type& key);
-				void								erase(const key_type&key);
-				IteratorType						erase(IteratorType& start, IteratorType& end);
+				IteratorType											find(const KeyType& key)					const;
+				SizeType												count(const KeyType& key)					const;
+				ztl::wrapper::tuples::pair<IteratorType, IteratorType>	equal_range(const KeyType& key)				const;
+				void													erase(const KeyType&key);
+				IteratorType											erase(IteratorType& start, IteratorType& end)	 ;
 			};
-			template<typename KeyType, typename IteratorType, typename SizeType, typename ValueType>
+			template< typename IteratorType, typename ValueType>
 			class IUnique
 			{
 			public:
-				pair<IteratorType, bool>	insert(const ValueType& target);
+				ztl::wrapper::tuples::pair<IteratorType, bool>	insert(const ValueType& target);
 				template<typename InputIterator>
-				void						insert(InputIterator& start, InputIterator& end);
+				void											insert(InputIterator& start, InputIterator& end);
 			};
 			template<typename KeyType, typename IteratorType, typename ValueType>
 			class IMultiple
 			{
 			public:
+				typedef KeyType key_type;
+			public:
 				IteratorType				insert(const ValueType& target);
 				template<typename InputIterator>
 				void						insert(InputIterator& start, InputIterator& end);
 			};
-			template<typename KeyType, typename IteratorType, typename ValueType = KeyType>
+			template<typename IteratorType, typename ValueType>
 			class ISimple
 			{
 			public:
+				typedef ValueType key_type;
 				//Key 和Value是同一个
 			};
-			template<typename KeyType, typename IteratorType, typename MapType, typename ValueType = pair<const KeyType, MapType>>
+			template<typename KeyType, typename IteratorType, typename MapType, typename ValueType = ztl::wrapper::tuples::pair<const KeyType, MapType>>
 			class IPair
 			{
 			public:
 				typedef MapType mapped_type;
+				typedef KeyType key_type;
 			};
 			template<typename KeyCompare, typename IteratorType, typename ValueCompare,typename KeyType>
 			class ISort
@@ -291,16 +251,14 @@ namespace ztl
 				IteratorType			lower_bound(const KeyType& key)		const;
 				IteratorType			uppper_bound(const KeyType& key)	const;
 			};
-			template<typename HasherType, typename KeyCompare, typename SizeType, typename KeyType>
+			template<typename HasherType,typename SizeType, typename KeyType>
 			class IHash
 			{
 			public:
-				typedef KeyCompare key_compare;
 				typedef HasherType hasher;
 			public:
 				hasher					hash_func()		const;
 				void					resize()			 ;
-				key_compare				key_comp()		const;
 				SizeType				bucket_count()	const;
 			};
 		}

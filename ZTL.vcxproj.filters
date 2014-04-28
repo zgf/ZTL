@@ -29,16 +29,25 @@
     <ClInclude Include="Z_String.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Z_Contract.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Z_TypeTraits.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Z_Allocetor.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Z_Concept.h">
+    <ClInclude Include="ztl_concept_base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ztl_Contract.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ztl_wrapper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ztl_type_traits.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ztl_iterator_adapter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ztl_concept.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

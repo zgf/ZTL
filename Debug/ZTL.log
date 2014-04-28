@@ -1,13 +1,228 @@
-﻿生成启动时间为 4/27/2014 3:22:15 AM。
+﻿生成启动时间为 4/28/2014 12:16:21 PM。
      1>项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-       Link:
-         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\MyProjects\ZTL\Debug\ZTL.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\MyProjects\ZTL\Debug\ZTL.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\MyProjects\ZTL\Debug\ZTL.lib" /MACHINE:X86 Debug\main.obj
-         ZTL.vcxproj -> F:\MyProjects\ZTL\Debug\ZTL.exe
-     1>已完成生成项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”(Build 个目标)的操作。
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(33): error C2039: “pointer_type”: 不是“std::vector<int,std::allocator<_Ty>>”的成员
+                 with
+                 [
+                     _Ty=int
+                 ]
+                 f:\myprojects\ztl\ztl\main.cpp(145): 参见对正在编译的类 模板 实例化“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”的引用
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(33): error C2146: 语法错误: 缺少“;”(在标识符“pointer_type”的前面)
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(33): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(33): error C2602: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::pointer_type”不是“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”基类的成员
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(33) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::pointer_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(33): error C2868: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::pointer_type”: 非法的 using 声明语法；应输入限定名
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(34): error C2039: “reference_type”: 不是“std::vector<int,std::allocator<_Ty>>”的成员
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(34): error C2146: 语法错误: 缺少“;”(在标识符“reference_type”的前面)
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(34): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(34): error C2602: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::reference_type”不是“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”基类的成员
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(34) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::reference_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(34): error C2868: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::reference_type”: 非法的 using 声明语法；应输入限定名
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(35): error C2039: “different_type”: 不是“std::vector<int,std::allocator<_Ty>>”的成员
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(35): error C2146: 语法错误: 缺少“;”(在标识符“different_type”的前面)
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(35): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(35): error C2602: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::different_type”不是“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”基类的成员
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(35) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::different_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(35): error C2868: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::different_type”: 非法的 using 声明语法；应输入限定名
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(36): error C2039: “iterator_category”: 不是“std::vector<int,std::allocator<_Ty>>”的成员
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(36): error C2146: 语法错误: 缺少“;”(在标识符“iterator_category”的前面)
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(36): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(36): error C2602: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category”不是“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”基类的成员
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(36) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_type_traits.h(36): error C2868: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category”: 非法的 using 声明语法；应输入限定名
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\main.cpp(145): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(36) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(145): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::value_type”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(32) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::value_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\main.cpp(145): 参见对正在编译的类 模板 实例化“ztl::apdapter::iterator_apdater::reverse_iterator<std::vector<int,std::allocator<_Ty>>,int>”的引用
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(146): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::pointer_type”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(33) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::pointer_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(147): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::reference_type”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(34) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::reference_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(148): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::different_type”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(35) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::different_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(149): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(36) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(150): error C2584: “ztl::apdapter::iterator_apdater::reverse_iterator<std::vector<int,std::allocator<_Ty>>,int>”: 直接基“ztl::concept::concept_base::IEquality<ztl::apdapter::iterator_apdater::reverse_iterator<std::vector<int,std::allocator<_Ty>>,int>>”不可访问；已是“ztl::concept::concept_iterator::IRandomAcessIterator<ztl::apdapter::iterator_apdater::reverse_iterator<std::vector<int,std::allocator<_Ty>>,int>,int,int,int,int,int>”的基
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(154): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::value_type”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(32) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::value_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(155): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::pointer_type”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(33) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::pointer_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(156): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::reference_type”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(34) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::reference_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(157): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::different_type”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(35) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::different_type”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\ztl_iterator_adapter.h(158): error C2248: “ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category”: 无法访问 private typedef(在“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>”类中声明)
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+                 f:\myprojects\ztl\ztl\ztl_type_traits.h(36) : 参见“ztl::traits::iterator_traits::iterator_traits<BidirectionalIterator>::iterator_category”的声明
+                 with
+                 [
+                     BidirectionalIterator=std::vector<int,std::allocator<int>>
+                 ]
+     1>f:\myprojects\ztl\ztl\main.cpp(145): error C2664: “ztl::apdapter::iterator_apdater::reverse_iterator<std::vector<int,std::allocator<_Ty>>,int>::reverse_iterator(ztl::apdapter::iterator_apdater::reverse_iterator<std::vector<_Ty,std::allocator<_Ty>>,int> &)”: 无法将参数 1 从“std::vector<int,std::allocator<_Ty>>”转换为“ztl::apdapter::iterator_apdater::reverse_iterator<std::vector<int,std::allocator<_Ty>>,int> &”
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>已完成生成项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”(Build 个目标)的操作 - 失败。
 
-生成成功。
+生成失败。
 
-已用时间 00:00:01.09
+已用时间 00:00:00.57
