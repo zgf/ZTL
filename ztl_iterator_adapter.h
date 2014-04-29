@@ -1,6 +1,7 @@
 #pragma once
 #include "ztl_concept.h"
 #include "ztl_type_traits.h"
+#include <iostream>
 namespace ztl
 {
 	namespace apdapter
@@ -100,7 +101,7 @@ namespace ztl
 			};
 			template<typename InsertContainer>
 			class insert_iterator :
-				public virtual ztl::concept::concept_iterator::IOutputIterator<insert_iterator<InsertContainer>, void, ztl::traits::iterator_traits::output_iterator, void, void, void>,
+				public virtual ztl::concept::concept_iterator::IOutputIterator<insert_iterator<InsertContainer>, void, ztl::traits::iterator_traits::output_iterator, void, void, void>
 			{
 			public:
 				typedef InsertContainer									container_type;
@@ -255,7 +256,7 @@ namespace ztl
 				public virtual ztl::concept::concept_iterator::IInputIterator<
 					istream_iterator<ElementType>,ElementType,ztl::traits::iterator_traits::input_iterator>,
 				public virtual ztl::concept::concept_base::IEquality<
-					istream_iterator<ElementType>, CharType, CharTraits>
+				istream_iterator<ElementType, CharType, CharTraits >>
 			{
 			public:
 				typedef ElementType												element_type;
@@ -264,7 +265,7 @@ namespace ztl
 				typedef istream_iterator<element_type, char_type,traits_type>	mySelf;
 				
 				//这块以后换成自己的流=.=mark
-				typedef basic_istream<char_type, traits_type> istream_type;
+				typedef std::basic_istream<char_type, traits_type> istream_type;
 			public:
 				istream_type* streamPtr;
 				element_type val;
@@ -323,7 +324,7 @@ namespace ztl
 				typedef CharTraits											 traits_type;
 				typedef ostream_iterator<element_type,char_type,traits_type> mySelf;
 				//这块以后换成自己的流=.=mark
-				typedef basic_ostream<char_type, traits_type> ostream_type;
+				typedef std::basic_ostream<char_type, traits_type> ostream_type;
 			public:
 				ostream_type*						streamPtr;
 				const char_type*					delim;
@@ -461,6 +462,33 @@ namespace ztl
 				static mySelf& make_move_iterator(iterator_type& target)
 				{
 					return std::move(mySelf(target));
+				}
+			};
+			template<typename IteratorType,typename ElementType>
+			class raw_storage_iterator:
+				virtual public ztl::concept::concept_iterator::IOutputIterator<
+		raw_storage_iterator<IteratorType,ElementType>,void,ztl::traits::iterator_traits::output_iterator,void,void,void>
+			{
+			public:
+				typedef IteratorType iterator_type;
+				typedef ElementType element_type;
+				typedef raw_storage_iterator<iterator_type, element_type> mySelf;
+			protected:
+				iterator_type Iter;
+			public:/*IOutputIterator*/
+				mySelf& operator++()
+				{
+					++Iter;
+					return *this;
+				}
+				reference_type operator*()const
+				{
+					return *this;
+				}
+				mySelf& operator=(const element_type& Val)
+				{
+					new(static<void*>(&*Iter))element_type(Val);
+					return *this;
 				}
 			};
 		}

@@ -9,7 +9,7 @@ namespace ztl
 		namespace concept_iterator
 		{
 			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
-			class IIterator :
+			class IIterator /*:*/
 				/*public concept_base::IEquality<IteratorType>, */
 			/*public  concept_base::IAssignable<IteratorType>*/
 			{
@@ -56,9 +56,9 @@ namespace ztl
 
 			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
 			class IForwardIterator :
-				public IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>,
-				public virtual IEquality<IteratorType>
-				public virtual concept_base::IAssignable<IteratorType>;
+				public virtual IIterator<IteratorType, ValueType, IteratorCategory, DifferentType, PointerType, ReferenceType>,
+				public virtual concept_base::IEquality<IteratorType>,
+				public virtual concept_base::IAssignable<IteratorType>
 			{
 			public:
 				IteratorType& operator++();
