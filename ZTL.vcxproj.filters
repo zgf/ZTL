@@ -20,15 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Z_Nullable.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Z_Exception.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Z_String.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ztl_concept_base.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -48,6 +39,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ztl_allocator_base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ztl_allocator.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

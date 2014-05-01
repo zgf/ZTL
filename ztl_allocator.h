@@ -49,7 +49,7 @@ namespace ztl
 				static allocator_base pool;
 			};
 			template <typename ValueType>
-			allocator_base allocator<ValueType>::pool(4096,128);
+			allocator_base allocator<ValueType>::pool(4096,256);
 			template<>
 			class allocator<void>
 			{

@@ -114,23 +114,42 @@
 //	}
 //	
 //}
-
+//template<typename allocType>
+//void testMemoryTime(const allocType& target)
+//{
+//	auto start = clock();
+//	for(auto i = 0; i < 1000000; i++)
+//	{
+//		Alloc<int>::Allocate(i / 10000 / 8 + 1);
+//
+//	}
+//	auto end = clock();
+//	std::cout << (double)end - start << std::endl;
+//}
+void alloc_r(const size_t& i)
+{
+	operator new(i / 40000);
+}
 int main()
 {
-	auto start = clock();
-	for(auto i = 0; i < 10000000; i++)
+
+	auto start1 = clock();
+	for(auto i = 40000; i < 5000000; i++)
 	{
-		ztl::memory::allocator::allocator<int>::raw_allocate(i/10000 / 8 + 1);
+		ztl::memory::allocator::allocator<int>::raw_allocate(i  / 40000 );
+		//operator new(i / 10000/ 8 + 1);
 	}
-	auto end = clock();
-	//std::cout << (double)end - start << std::endl;
-	//auto start1 = clock();
-	//for(auto i = 0; i < 1000000; i++)
-	//{
-	//	operator new(i / 1000/ 8 + 1);
-	//}
-	//auto end1 = clock();
+	auto end1 = clock();
 	//std::cout << (double)end1 - start1 << std::endl;
+	auto start2 = clock();
+	for(auto i = 40000; i < 5000000; i++)
+	{
+		//ztl::memory::allocator::allocator<int>::raw_allocate(i / 10000 / 8 + 1);
+		alloc_r(i);
+	}
+	auto end2 = clock();
+	//std::cout << (double)end2 - start2 << std::endl;
+	std::cout << ((double)end1 - start1)/((double)end2 - start2) << std::endl;
 
 	//std::cout << (int)a1<<std::endl;
 	//std::cout << (int)a2<<std::endl;

@@ -5,6 +5,11 @@ namespace ztl
 	{
 		namespace concept_base
 		{
+			class INocopyable
+			{
+				INocopyable& operator=(INocopyable&);
+				INocopyable(INocopyable&);
+			};
 			template<typename DerivedType>
 			class IAssignable
 			{

@@ -7,23 +7,24 @@ namespace ztl
 	{
 		namespace allocator
 		{
+			class MemoryPool
+			{
 
+			};
 			class Chunk
 			{
 			
 			public:
 				Chunk() = delete;
-				Chunk(size_t blockSzie,size_t tnumBlocks)
+				Chunk(size_t blockSzie, unsigned char tnumBlocks) :numBlocks(tnumBlocks) ,firstBlockIndex (0)
 				{
-					ChunkPtr.blockPtr = static_cast<size_t*>(operator new(tnumBlocks * blockSzie));
-					firstBlockIndex = 0;
-					numBlocks = tnumBlocks;
-				//	std::cout << (int)numBlocks << std::endl;
-					auto listPtr = ChunkPtr;
-					for(size_t i = 0; i < numBlocks; listPtr.blockPtr += blockSzie)
+					ChunkPtr.blockPtr = static_cast<unsigned char*>(operator new[](numBlocks * blockSzie));
+					slistNode listPtr = ChunkPtr;
+					for(unsigned char i = 0; i < numBlocks; listPtr.blockPtr += blockSzie)
 					{
 						listPtr.listIndex = ++i;
 					}
+					
 				}
 				~Chunk()
 				{
@@ -42,25 +43,33 @@ namespace ztl
 				//	std::cout << (int)numBlocks<<std::endl;
 					return ReutrnPtr;
 				}
-				void deallocate(void* p,size_t BlockSize)
+				void deallocate(void* p,size_t blockSize)
 				{
 					slistNode pNode;
-					pNode.blockPtr = static_cast<size_t*>(p);
+					pNode.blockPtr = static_cast<unsigned char*>(p);
 					pNode.listIndex = firstBlockIndex;
-					firstBlockIndex = (pNode.blockPtr - ChunkPtr.blockPtr) / BlockSize;
+					firstBlockIndex = (pNode.blockPtr - ChunkPtr.blockPtr) / blockSize;
 					++numBlocks;
 				}
 		
 				union slistNode
 				{
-					size_t* blockPtr;
-					size_t listIndex;
+					unsigned char* blockPtr;
+					unsigned char listIndex;
 				};
 				slistNode ChunkPtr;
 				//第一个可以被使用的block索引
-				size_t firstBlockIndex;
+				unsigned char firstBlockIndex;
 				//可用块数量最多255
-				size_t numBlocks;
+				unsigned char numBlocks;
+			};
+			template<typename key>
+			struct _hasher
+			{
+				size_t operator()(const key& Key)
+				{
+					return Key;
+				}
 			};
 			class FixObjectAllocator
 			{
@@ -68,7 +77,7 @@ namespace ztl
 			public:
 				FixObjectAllocator()=delete;
 				
-				FixObjectAllocator(const size_t tblockSize,const size_t tnumBlocks) :blockSize(tblockSize), numBlocks(tnumBlocks)
+				FixObjectAllocator(const size_t tblockSize,const unsigned char tnumBlocks) :blockSize(tblockSize), numBlocks(tnumBlocks)
 				{
 					lastAllocIndex = -1;
 					lastDeallocIndex = -1;
@@ -76,7 +85,7 @@ namespace ztl
 				}
 				void* allocate()
 				{
-					if(lastAllocIndex == -1 || chunkList[lastAllocIndex].numBlocks == 0)
+					if(lastAllocIndex == -1 || chunkList[lastAllocIndex]->numBlocks == 0)
 					{
 						if (emptyBlockIndex != -1)
 						{
@@ -86,24 +95,34 @@ namespace ztl
 						else
 						{
 							
-							for(int i = chunkList.size() - 1;; i--)
+							int endIndex = (chunkList.size() - 1);
+							if(endIndex == -1 || chunkList[endIndex]->numBlocks == 0)
 							{
-								if(i == -1)
-								{
-									chunkList.push_back(Chunk(blockSize, numBlocks));
-									lastAllocIndex = chunkList.size() - 1;
-									break;
-								}
-								auto& Iter = chunkList[i];
-								if(Iter.numBlocks != 0)
-								{
-									lastAllocIndex = i;
-									break;
-								}
+								chunkList.push_back(new Chunk(blockSize, numBlocks));
+								lastAllocIndex = chunkList.size() - 1;
 							}
+							else
+							{
+								lastAllocIndex = endIndex;
+							}
+							/*for(int i = chunkList.size() - 1;; i--)
+							{
+							if(i == -1)
+							{
+							chunkList.push_back(Chunk(blockSize, numBlocks));
+							lastAllocIndex = chunkList.size() - 1;
+							break;
+							}
+							auto& Iter = chunkList[i];
+							if(Iter.numBlocks != 0)
+							{
+							lastAllocIndex = i;
+							break;
+							}
+							}*/
 						}
 					}
-					return chunkList[lastAllocIndex].allocate(blockSize);
+					return chunkList[lastAllocIndex]->allocate(blockSize);
 				}
 				
 				void deallocate(void* p)
@@ -112,9 +131,10 @@ namespace ztl
 					{
 						for(size_t i = 0; i < chunkList.size();i++)
 						{
+							auto endIndex = chunkList.size() - 1;
 							if (IsEmptyChunk(i))
 							{
-								auto endIndex = chunkList.size() - 1;
+								
 								if (emptyBlockIndex == -1)
 								{
 									//发现的block是第一个空块
@@ -143,12 +163,22 @@ namespace ztl
 							}
 							if (InThisChunk(p,i))
 							{
+								std::swap(chunkList[i], chunkList.back());
+								//这里要检查是不是lastalloc和lastdelloc是最后一个元素
+								if(lastAllocIndex == endIndex)
+								{
+									lastAllocIndex = i;
+								}
+								if(lastDeallocIndex == endIndex)
+								{
+									lastDeallocIndex = i;
+								}
 								lastDeallocIndex = i;
 								break;
 							}
 						}
 					}
-					chunkList[lastDeallocIndex].deallocate(p, blockSize);
+					chunkList[lastDeallocIndex]->deallocate(p, blockSize);
 				}
 				const size_t& GetBlockSize()const
 				{
@@ -157,18 +187,18 @@ namespace ztl
 			private:
 				bool InThisChunk(const void* p, const int index)const
 				{
-					return p > chunkList[index].ChunkPtr.blockPtr && p < chunkList[index].ChunkPtr.blockPtr + blockSize * numBlocks;
+					return p > chunkList[index]->ChunkPtr.blockPtr && p < chunkList[index]->ChunkPtr.blockPtr + blockSize * numBlocks;
 				}
 				bool IsEmptyChunk(const size_t Index)
 				{
-					return chunkList[Index].numBlocks == numBlocks;
+					return chunkList[Index]->numBlocks == numBlocks;
 				}
 				
 			private:
 				//Chunk的块大小
 				const size_t blockSize;
-				const size_t numBlocks;
-				std::vector<Chunk> chunkList;
+				const unsigned char numBlocks;
+				std::vector<Chunk*> chunkList;
 				//最近一次分配的Chunk地址
 				int lastAllocIndex;
 				//最新一次归还的Chunk地址
@@ -182,7 +212,15 @@ namespace ztl
 				
 				allocator_base(const size_t tChunkSize = 4096, const size_t tMaxObjectSize=128) :chunkSize(tChunkSize), maxObjectSize(tMaxObjectSize)
 				{
-					
+					FixObjectMap = new FixObjectAllocator*[tMaxObjectSize];
+					memset(FixObjectMap, 0, tMaxObjectSize*4);
+
+				//	FixObjectMap.reserve(maxObjectSize);
+				}
+				unsigned char BlockCount(const size_t nByte)
+				{
+					size_t result = chunkSize / nByte;
+					return result > 255 ? 255 : result;
 				}
 				void* allocate(const size_t nByte)
 				{
@@ -192,13 +230,21 @@ namespace ztl
 					}
 					else
 					{
-						auto& findIter = FixObjectMap.find(nByte);
+
+						/*auto& findIter = FixObjectMap.find(nByte);
 						if (findIter == FixObjectMap.end())
 						{
-							FixObjectMap.insert(std::make_pair(nByte, std::move(FixObjectAllocator(nByte, chunkSize/nByte))));
+
+							FixObjectMap.insert(std::make_pair(nByte, std::move(FixObjectAllocator(nByte, BlockCount(nByte)))));
 						}
 						findIter = FixObjectMap.find(nByte);
-						return findIter->second.allocate();
+						return findIter->second.allocate();*/
+						if(FixObjectMap[nByte]==nullptr)
+						{
+							
+							FixObjectMap[nByte] = new FixObjectAllocator(nByte, BlockCount(nByte));
+						}
+						return FixObjectMap[nByte]->allocate();
 					}
 				}
 				void deallocate(void* p,const size_t nByte)
@@ -209,8 +255,8 @@ namespace ztl
 					}
 					else
 					{
-						auto& findIter = FixObjectMap.find(nByte);
-						findIter->second.deallocate(p);
+						/*auto& findIter = FixObjectMap.find(nByte);
+						findIter->second.deallocate(p);*/
 					}
 				}
 			private:
@@ -219,7 +265,8 @@ namespace ztl
 				//小对象大小上限
 				const size_t maxObjectSize;
 				//key是blockSize
-				std::unordered_map<size_t,FixObjectAllocator> FixObjectMap;
+				//std::unordered_map<size_t, FixObjectAllocator, _hasher<size_t>> FixObjectMap;
+				FixObjectAllocator** FixObjectMap;
 			};
 		}
 	}
