@@ -126,30 +126,65 @@
 //	auto end = clock();
 //	std::cout << (double)end - start << std::endl;
 //}
-void alloc_r(const size_t& i)
-{
-	operator new(i / 40000);
-}
-int main()
+class BaseA
 {
 
+};
+enum class Tag
+{
+	Fas,
+	Te
+};
+class BaseB :public BaseA
+{
+public:
+	int Data;
+	const int fooFunc(int a,int b)
+	{
+		return 0;
+	}
+};
+struct S
+{
+};
+struct T : public S
+{
+};
+void func()
+{
+
+}
+using namespace ztl::traits::type_traits;
+int main()
+{
+	
+	//std::cout << ztl::traits::type_traits::is_base_of<BaseB, BaseA>::value;
+	//using functype = int(BaseB::*);
+	auto i =&BaseB::fooFunc;
+	std::cout << ztl::traits::type_traits::is_member_function_pointer<decltype(i)>::value << std::endl;
+	std::cout << std::is_enum<Tag>::value<< std::endl;
+	std::cout << ztl::traits::type_traits::is_class<Tag>::value << std::endl;
+	
+	//std::cout << bool_predicate<is_convertible<BaseB, BaseA>::value>::value<<std::endl;
+	//std::cout << is_base_of<BaseB, BaseA>::value << std::endl;
+	//std::cout<<ztl::traits::type_traits::is_convertible<long, int>::value;
 	auto start1 = clock();
-	for(auto i = 40000; i < 5000000; i++)
-	{
-		ztl::memory::allocator::allocator<int>::raw_allocate(i  / 40000 );
-		//operator new(i / 10000/ 8 + 1);
-	}
-	auto end1 = clock();
-	//std::cout << (double)end1 - start1 << std::endl;
-	auto start2 = clock();
-	for(auto i = 40000; i < 5000000; i++)
-	{
-		//ztl::memory::allocator::allocator<int>::raw_allocate(i / 10000 / 8 + 1);
-		alloc_r(i);
-	}
-	auto end2 = clock();
-	//std::cout << (double)end2 - start2 << std::endl;
-	std::cout << ((double)end1 - start1)/((double)end2 - start2) << std::endl;
+	//for(auto i = 40000; i < 5000000; i++)
+	//{
+	//	ztl::memory::allocator::allocator<int>::raw_allocate(i  / 40000 );
+	//	//operator new(i / 10000/ 8 + 1);
+	//}
+	//auto end1 = clock();
+	////std::cout << (double)end1 - start1 << std::endl;
+	//auto start2 = clock();
+	//for(auto i = 40000; i < 5000000; i++)
+	//{
+	//	//ztl::memory::allocator::allocator<int>::raw_allocate(i / 10000 / 8 + 1);
+	//	alloc_r(i);
+	//}
+	//auto end2 = clock();
+	////std::cout << (double)end2 - start2 << std::endl;
+	//std::cout << ((double)end1 - start1)/((double)end2 - start2) << std::endl;
 
 	//std::cout << (int)a1<<std::endl;
 	//std::cout << (int)a2<<std::endl;

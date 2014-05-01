@@ -56,6 +56,8 @@ namespace ztl
 				typedef void value_type;
 			};
 		}
+		/*¹¹Ôì*/
+		/*Îö¹¹*/
 		
 	}
 }
