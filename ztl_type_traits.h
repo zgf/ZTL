@@ -58,9 +58,8 @@ namespace ztl
 		}
 		namespace type_traits
 		{
-
 			/*类型常量*/
-			template<typename ValueType,ValueType Val>
+			template<typename ValueType, ValueType Val>
 			struct integral_constant
 			{
 			public:
@@ -75,7 +74,7 @@ namespace ztl
 			};
 			typedef integral_constant<bool, true> true_type;
 			typedef integral_constant<bool, false> false_type;
-
+			/*编译期工具*/
 			//1 2转换成true,false
 			class TrueType
 			{
@@ -100,10 +99,10 @@ namespace ztl
 			template<bool>
 			struct bool_predicate
 			{
-				
+
 			};
 			template<>
-			struct bool_predicate<false>:false_type
+			struct bool_predicate<false> :false_type
 			{
 
 			};
@@ -112,6 +111,21 @@ namespace ztl
 			{
 
 			};
+			template<bool Chose,typename TruePath,typename FalsePath>
+			struct if_else
+			{
+			};
+			template<typename TruePath,typename FalsePath>
+			struct if_else<true, TruePath, FalsePath>
+			{
+				typedef TruePath type;
+			};
+			template<typename TruePath, typename FalsePath>
+			struct if_else<false, TruePath, FalsePath>
+			{
+				typedef FalsePath type;
+			};
+			
 			
 			/*类型关系*/
 			template<typename T1,typename T2>
@@ -126,7 +140,7 @@ namespace ztl
 			};
 //FromType可以转换为ToType则返回true
 			
-			template<typename FromType,typename ToType>
+			/*template<typename FromType,typename ToType>
 			struct is_convertible_impl
 			{
 				static TrueType test_convertible(ToType);
@@ -136,7 +150,12 @@ namespace ztl
 			struct is_convertible : sizeof_predicate<sizeof(is_convertible_impl<FromType, ToType>::test_convertible(FromType()))>
 			{
 				
-			};
+			};*/
+			/*template<typename FromType, typename ToType>
+			struct is_convertible:is_convertible_to<FromType, ToType>
+			{
+
+			};*/
 			template<typename BaseType, typename DerivedType>
 			struct is_base_of : bool_predicate<__is_base_of(BaseType, DerivedType)>
 			{
@@ -151,14 +170,31 @@ namespace ztl
 				Type One;
 				char Two;
 				Type Three;
+				
 			};
 			
 			template<typename Type>
-			struct alignment_of :integral_constant<size_t, sizeof(alignment_impl<Type>) - 2*alignment_impl<Type>>
+			struct alignment_of :integral_constant<size_t, sizeof(alignment_impl<Type>) - 2*sizeof(Type)>
 			{
 
 			};
+#define  IS_TYPE_CV_PROPERTY(property)\
+			template<typename Type>\
+			struct is_##property : false_type\
+			{\
+			};\
+			template<typename Type>\
+			struct is_##property<property Type> : true_type\
+			{\
+			};
+			
+			IS_TYPE_CV_PROPERTY(const);
+			IS_TYPE_CV_PROPERTY(volatile);
+#undef IS_TYPE_CV_PROPERTY
+
+			
 			/*类型转化*/
+
 			//移除类型的cv属性
 #define REMOVE_CV(cv) template<typename Type>\
 			struct remove_##cv\
@@ -283,26 +319,82 @@ namespace ztl
 			{
 				typedef typename remove_pointer<Type>::type type;
 			};
+//移除引用
+			template<typename Type>
+			struct remove_reference
+			{
+
+			};
+			template<typename Type>
+			struct remove_reference<Type&>
+			{
+				typedef Type type;
+			};
+			template<typename Type>
+			struct remove_reference<Type&&>
+			{
+				typedef Type type;
+			};
+
 			/*主类型分类*/
 #define COMPLIER_COMPLETE(class_name)\
 	template<typename Type>\
 			struct class_name : bool_predicate<__##class_name(Type)>\
 			{};
-
+#define COMPLIER_COMPLETE_TwoArg(class_name,from_type,to_type)\
+	template<typename from_type,typename to_type>\
+			struct class_name : bool_predicate<__##class_name(from_type,to_type)>\
+			{};
 			COMPLIER_COMPLETE(has_nothrow_assign);
 			COMPLIER_COMPLETE(has_nothrow_constructor);
 			COMPLIER_COMPLETE(has_nothrow_copy);
+			COMPLIER_COMPLETE(is_nothrow_destructible);
+			COMPLIER_COMPLETE(is_destructible);
 			COMPLIER_COMPLETE(has_trivial_assign);
 			COMPLIER_COMPLETE(has_trivial_constructor);
 			COMPLIER_COMPLETE(has_trivial_copy);
 			COMPLIER_COMPLETE(has_trivial_destructor);
 			COMPLIER_COMPLETE(has_virtual_destructor);
-			COMPLIER_COMPLETE(is_pod);
 			COMPLIER_COMPLETE(is_polymorphic);
 			COMPLIER_COMPLETE(is_enum);
-			COMPLIER_COMPLETE(is_union);
+			COMPLIER_COMPLETE(is_pod);
+			COMPLIER_COMPLETE(is_class);
 			COMPLIER_COMPLETE(is_abstract);
+			COMPLIER_COMPLETE(is_union);
 			COMPLIER_COMPLETE(is_empty);
+			COMPLIER_COMPLETE(is_trivial);
+			COMPLIER_COMPLETE(is_literal_type);
+			COMPLIER_COMPLETE(is_standard_layout);
+			COMPLIER_COMPLETE_TwoArg(is_convertible_to, FromType, ToType);
+			COMPLIER_COMPLETE_TwoArg(is_nothrow_assignable, ToType, FromType);
+			COMPLIER_COMPLETE_TwoArg(is_trivially_assignable, ToType, FromType);
+			COMPLIER_COMPLETE_TwoArg(is_constructible, Type, ArgsPack);
+			COMPLIER_COMPLETE_TwoArg(is_trivially_constructible, Type, ArgsPack);
+			COMPLIER_COMPLETE_TwoArg(is_nothrow_constructible, Type, ArgsPack);
+	//		COMPLIER_COMPLETE(is_assignable);
+	//		COMPLIER_COMPLETE(is_constructible);
+	//		COMPLIER_COMPLETE(is_copy_assignable);
+	//		COMPLIER_COMPLETE(is_copy_constructible);
+	//		COMPLIER_COMPLETE(is_destructible);
+	//		COMPLIER_COMPLETE(is_default_constructible);
+	//		COMPLIER_COMPLETE(is_move_assignable);
+	//		COMPLIER_COMPLETE(is_move_constructible);
+	//		COMPLIER_COMPLETE(is_trivially_assignable);
+	//		COMPLIER_COMPLETE(is_trivially_constructible);
+	//		COMPLIER_COMPLETE(is_trivially_copy_assignable);
+	//		COMPLIER_COMPLETE(is_trivially_copy_constructible);
+	//		COMPLIER_COMPLETE(is_trivially_destructible);
+		//	COMPLIER_COMPLETE(is_trivially_default_constructible);
+	//		COMPLIER_COMPLETE(is_trivially_move_assignable);
+	//		COMPLIER_COMPLETE(is_trivially_move_constructible);
+	//		COMPLIER_COMPLETE(is_nothrow_assignable);
+		//	COMPLIER_COMPLETE(is_nothrow_constructible);
+		//	COMPLIER_COMPLETE(is_nothrow_copy_assignable);
+		//	COMPLIER_COMPLETE(is_nothrow_copy_constructible);
+		//	COMPLIER_COMPLETE(is_nothrow_destructible);
+		//	COMPLIER_COMPLETE(is_nothrow_default_constructible);
+		//	COMPLIER_COMPLETE(is_nothrow_move_assignable);
+		//	COMPLIER_COMPLETE(is_nothrow_move_constructible);
 #undef COMPLIER_COMPLETE
 			template<typename Type>
 			struct is_float_impl : false_type
@@ -360,7 +452,7 @@ namespace ztl
 			{
 
 			};
-			template<typename ClassType>
+			/*template<typename ClassType>
 			struct is_class:false_type
 			{
 
@@ -369,7 +461,7 @@ namespace ztl
 			struct is_class<ValueType ClassType::*> : true_type
 			{
 
-			};
+			};*/
 			
 			template<typename ClassType>
 			struct is_member_function_pointer :false_type
@@ -454,6 +546,16 @@ namespace ztl
 #undef IS_INTEGRAL
 			/*次类型分类*/
 			template<typename Type>
+			struct is_signed : bool_predicate <((typename remove_cv<Type>::type)(-1) > (typename remove_cv<Type>::type)(0)) >
+			{
+
+			};
+			template<typename Type>
+			struct is_unsigned : bool_predicate < ((typename remove_cv<Type>::type)(-1) < (typename remove_cv<Type>::type)(0))>
+			{
+
+			};
+			template<typename Type>
 			struct is_arithmetic : bool_predicate<is_integral<Type>::value || is_float_point<Type>::value>
 			{
 				
@@ -487,6 +589,73 @@ namespace ztl
 				|| is_member_pointer<Type>::value>
 			{
 
+			};
+			/*类型退化*/
+			template<typename Type>
+			struct decay
+			{
+				typedef typename remove_cv<typename remove_reference<Type>::type>::type non_ref_type;
+				typedef typename if_else<is_array<non_ref_type>::value,
+					typename remove_bound<non_ref_type>::type*,
+					typename if_else<is_function<non_ref_type>::value,
+					typename add_pointer<non_ref_type>,
+					typename remove_cv<non_ref_type>::type>::type>::type type;
+			};
+			/*类型替换*/
+			template<typename Tc, typename Ts, typename Tr, bool>
+			struct replace_type_impl;
+			template<typename Tc, typename Ts, typename Tr>
+			struct replace_type;
+
+			template<typename Tc, typename Ts, typename Tr>
+			struct replace_type_impl<Tc, Ts, Tr, true>
+			{
+				typedef Tr type;
+			};
+			template<typename Tc, typename Ts, typename Tr>
+			struct replace_type_impl<Tc*, Ts, Tr, false>
+			{
+				typedef typename replace_type<Tc, Ts, Tr>::type* type;
+			};
+			template<typename Tc, typename Ts, typename Tr>
+			struct replace_type_impl<const Tc, Ts, Tr, false>
+			{
+				typedef typename const replace_type<Tc, Ts, Tr>::type type;
+			};
+			template<typename Tc, typename Ts, typename Tr>
+			struct replace_type_impl<volatile Tc, Ts, Tr, false>
+			{
+				typedef typename volatile replace_type<Tc, Ts, Tr>::type type;
+			};
+			template<typename Tc, typename Ts, typename Tr>
+			struct replace_type_impl<Tc&, Ts, Tr, false>
+			{
+				typedef typename replace_type<Tc, Ts, Tr>::type& type;
+			};
+			template<typename Tc, typename Ts, typename Tr, typename Class>
+			struct replace_type_impl<Tc Class::*, Ts, Tr, false>
+			{
+				typedef typename replace_type<Tc, Ts, Tr>::type  Class::* type;
+			};
+			template<typename Tc, typename Ts, typename Tr>
+			struct replace_type_impl<Tc&&, Ts, Tr, false>
+			{
+				typedef typename replace_type<Tc, Ts, Tr>::type& type;
+			};
+			template<typename Tc, typename Ts, typename Tr>
+			struct replace_type_impl< Tc[], Ts, Tr, false>
+			{
+				typedef typename replace_type<Tc, Ts, Tr>::type type[];
+			};
+			template<typename Tc, typename Ts, typename Tr, size_t Index>
+			struct replace_type_impl<Tc[Index], Ts, Tr, false>
+			{
+				typedef typename replace_type<Tc, Ts, Tr>::type type[Index];
+			};
+			template<typename Tc, typename Ts, typename Tr>
+			struct replace_type
+			{
+				typedef typename replace_type_impl<Tc, Ts, Tr, std::is_same<Tc, Ts>::value>::type type;
 			};
 		}
 	}

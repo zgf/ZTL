@@ -8,6 +8,7 @@
 #include "ztl_iterator_adapter.h"
 #include "ztl_allocator.h"
 #include <ctime>
+#include <string>
 //约定 类型名 pascal式
 // 类成员 驼峰式+前缀后缀
 // 变量名 驼峰式+前缀后缀
@@ -114,56 +115,42 @@
 //	}
 //	
 //}
-//template<typename allocType>
-//void testMemoryTime(const allocType& target)
-//{
-//	auto start = clock();
-//	for(auto i = 0; i < 1000000; i++)
-//	{
-//		Alloc<int>::Allocate(i / 10000 / 8 + 1);
-//
-//	}
-//	auto end = clock();
-//	std::cout << (double)end - start << std::endl;
-//}
-class BaseA
+using std::cout;
+using std::endl;
+ typedef char(&rn3)[3];
+ rn3& func()
 {
-
-};
-enum class Tag
-{
-	Fas,
-	Te
-};
-class BaseB :public BaseA
-{
-public:
-	int Data;
-	const int fooFunc(int a,int b)
-	{
-		return 0;
-	}
-};
-struct S
-{
-};
-struct T : public S
-{
-};
-void func()
-{
-
+	char a[3];
+	
+	rn3 r= a;
+	cout << "r" << &r << endl;
+	
+	return r;
 }
 using namespace ztl::traits::type_traits;
+union Class
+{
+	int a;
+	int b;
+};
 int main()
 {
-	
+	Class test;
+	test.b = 10;
+	using UnionPtr = int Class::*;
+	UnionPtr p = &Class::b;
+	cout<<test.*p;
+	//std::string i[10];
+	//fun(i);
+	//rn3& i = func();
+	//cout << &i << endl;
 	//std::cout << ztl::traits::type_traits::is_base_of<BaseB, BaseA>::value;
 	//using functype = int(BaseB::*);
-	auto i =&BaseB::fooFunc;
+	//decay
+	/*auto i =&BaseB::fooFunc;
 	std::cout << ztl::traits::type_traits::is_member_function_pointer<decltype(i)>::value << std::endl;
 	std::cout << std::is_enum<Tag>::value<< std::endl;
-	std::cout << ztl::traits::type_traits::is_class<Tag>::value << std::endl;
+	std::cout << ztl::traits::type_traits::is_class<Tag>::value << std::endl;*/
 	
 	//std::cout << bool_predicate<is_convertible<BaseB, BaseA>::value>::value<<std::endl;
 	//std::cout << is_base_of<BaseB, BaseA>::value << std::endl;
