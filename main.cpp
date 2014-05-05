@@ -135,7 +135,7 @@ struct Foo
 	Foo(int num) : num_(num)
 	{
 	}
-	int __stdcall print_add(int i) 
+	int  print_add(int i) 
 	{
 		std::cout << num_ + i << '\n';
 		return 0;

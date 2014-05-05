@@ -116,12 +116,13 @@ namespace ztl
 				return reinterpret_cast<func_ptr_type>(handler.normal_functor)();
 			}
 		};
+		/*其他调用约定等用到再加*/
 		template<typename ReturnType, typename... FuncArgs>
-		class function<ReturnType(*)(FuncArgs...)>
+		class function<ReturnType(__cdecl *)(FuncArgs...)>
 		{
 		public:
 			typedef ReturnType return_type;
-			using func_ptr_type = ReturnType(*)(FuncArgs...);
+			using func_ptr_type = ReturnType(__cdecl *)(FuncArgs...);
 		public:
 			func_ptr_type handler;
 		public:
@@ -149,11 +150,11 @@ namespace ztl
 			}
 		};
 		template<typename ReturnType, typename ClassType, typename... FuncArgs>
-		class function<ReturnType(ClassType::*)(FuncArgs...)>
+		class function<ReturnType(__thiscall ClassType::*)(FuncArgs...)>
 		{
 		public:
 			typedef ReturnType return_type;
-			using func_ptr_type = ReturnType(ClassType::*)(FuncArgs...);
+			using func_ptr_type = ReturnType(__thiscall ClassType::*)(FuncArgs...);
 		public:
 			func_ptr_type handler;
 		public:
@@ -180,38 +181,5 @@ namespace ztl
 				return (firstArg->*handler)(Args...);
 			}
 		};
-		/*template<typename ReturnType, typename ClassType, typename... FuncArgs>
-		class function<ReturnType(__stdcall ClassType::*)(FuncArgs...)>
-		{
-		public:
-			typedef ReturnType return_type;
-			using func_ptr_type = ReturnType(ClassType::*)(FuncArgs...);
-		public:
-			func_ptr_type handler;
-			const bool value = true;
-		public:
-			function()
-			{
-
-			}
-			function(const func_ptr_type& target)
-			{
-				handler = target;
-			}
-			template<typename Type>
-			function& operator=(const func_ptr_type& target)
-			{
-				handler = target;
-			}
-			function(const function& target)
-			{
-				handler = target.handler;
-			}
-			template<typename FirstType, typename... PushArgs>
-			return_type operator()(const FirstType& firstArg, const PushArgs&... Args)
-			{
-				return (firstArg->*handler)(Args...);
-			}
-		};*/
 	}
 }
