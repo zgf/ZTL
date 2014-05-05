@@ -135,7 +135,7 @@ struct Foo
 	Foo(int num) : num_(num)
 	{
 	}
-	int print_add(int i) 
+	int __stdcall print_add(int i) 
 	{
 		std::cout << num_ + i << '\n';
 		return 0;
@@ -160,7 +160,6 @@ void testb()
 {
 	std::cout << "succ";
 }
-#include <functional>
 
 
 using namespace ztl::traits::type_traits;
@@ -191,9 +190,9 @@ int main()
 	c(4);
 	ztl::functional::function<int()>d=&testb;
 	d();
-	ztl::functional::function<int(Foo*,int)>e=&Foo::print_add;
-	Foo ef(1);
-	e(&ef, 1);
+	//ztl::functional::function<int(Foo*,int)>e=&Foo::print_add;
+	//Foo ef(1);
+	//e(&ef, 1);
 	ztl::functional::function<decltype(&test)>g=&test;
 	g(4);
 	ztl::functional::function<bool(Foo*,int,int)>h=&Foo::operator();

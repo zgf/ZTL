@@ -3,310 +3,215 @@ namespace ztl
 {
 	namespace functional
 	{
-		
-		template <typename Function>
-		struct function_traits
-			: public function_traits<decltype(&Function::operator())>
+		class empty
 		{
 		};
-
-		template <typename ClassType, typename ReturnType, typename... Args>
-		struct function_traits<ReturnType(ClassType::*)(Args...) const>
+		//用handle消除编译时类型限制
+		union handle
 		{
-			typedef ReturnType(*pointer)(Args...);
-		};
-		enum RealType :bool
-		{
-			FunctionPtr,
-			MemberFunctionPtr
-		};
-		template<typename ReturnType>
-		class func_ptr_traits
-		{
-		public:
-			using func_type = typename function_traits<ReturnType>::pointer;
-			
-			template<typename Type>
-			static int* get_addr(const Type& ptr)
-			{
-				func_type p = ptr;
-				return std::move((int*)p);
-			}
-			static RealType get_tag()
-			{
-				return FunctionPtr;
-			}
-		};
-	
-		template<typename ReturnType,typename ClassType,typename... FuncArgs>
-		class func_ptr_traits< ReturnType(ClassType::*)(FuncArgs...)>
-		{
-		public:
-			using func_type = ReturnType(ClassType::*)(FuncArgs...);
-			
-			template<typename Type>
-			static int* get_addr(const Type& ptr)
-			{
-				union
-				{
-					Type _f;
-					int* _t;
-				}ut;
-				ut._f = ptr;
-				
-				return ut._t;;
-			}
-			static RealType get_tag()
-			{
-				return MemberFunctionPtr;
-			}
-		
-		};
-		template<typename ReturnType, typename... FuncArgs>
-		class func_ptr_traits<ReturnType(*)(FuncArgs...)> 
-		{
-		public:
-			using func_type = ReturnType(*)(FuncArgs...);
-			static RealType get_tag()
-			{
-				return FunctionPtr;
-			}
-			template<typename Type>
-			static int* get_addr(const Type& ptr)
-			{
-				return std::move((int*)ptr);
-			}
-		};
-		
-
-		template<typename ReturnType,typename... RestArgs>
-		class function_impl;
-		
-		template<typename ReturnType,typename FirstType, typename... RestArgs>
-		class function_impl<ReturnType,FirstType, RestArgs...>
-		{
-		public:
-			typedef ReturnType return_type;
-			function_impl() : addr(nullptr)
-			{
-				
-			}
-			function_impl(const function_impl& target)
-			{
-				if (addr !=nullptr)
-				{
-					delete addr;
-				}
-				addr = target.addr;
-			}
-			template<typename Type>
-			function_impl& operator=(const Type& Ptr)
-			{
-				addr = func_ptr_traits<Type>::get_addr(Ptr);
-				return *this;
-
-			}
-			function_impl& operator=(const function_impl& target)
-			{
-				addr = target.addr;
-				return *this;
-
-			}
-			template<typename Type>
-			function_impl(const Type& Ptr) :tag(func_ptr_traits<Type>::get_tag())
-			{
-				addr = func_ptr_traits<Type>::get_addr(Ptr);
-			}
-			template<typename... FuncArgs>
-			return_type operator()(FirstType firstArg, FuncArgs... Args)
-			{
-				if (tag == FunctionPtr)
-				{
-					using funcType = return_type(*)(FirstType, FuncArgs...);
-					return	((funcType)addr)(firstArg, Args...);
-				}
-				else
-				{
-					using funcType = return_type(__thiscall*)(void*, FuncArgs...);
-					return	funcType(addr)((void*)*(int*)&firstArg, Args...);
-				}
-			}
-			int* addr;
-			RealType tag;
-		};
-		template<typename ReturnType>
-		class function_impl<ReturnType>
-		{
-		public:
-			typedef ReturnType return_type;
-			function_impl() : addr(nullptr)
-			{
-
-			}
-			function_impl(const function_impl& target)
-			{
-				if(addr != nullptr)
-				{
-					delete addr;
-				}
-				addr = target.addr;
-			}
-			template<typename Type>
-			function_impl& operator=(const Type& Ptr)
-			{
-				addr = func_ptr_traits<Type>::get_addr(Ptr);
-				return *this;
-
-			}
-			function_impl& operator=(const function_impl& target)
-			{
-				addr = target.addr;
-				return *this;
-
-			}
-			template<typename Type>
-			function_impl(const Type& Ptr) 
-			{
-				addr = func_ptr_traits<Type>::get_addr(Ptr);
-			}
-			return_type operator()()
-			{
-				return reinterpret_cast<return_type(*)()>(addr)();
-			}
-		public:
-			int* addr;
-
+			using func_type = void(*)();
+			using object_type = void(empty::*)();
+			object_type object_func_ptr;
+			func_type normal_functor;
 		};
 		template<typename Type>
+		class function_traits : public function_traits<decltype(&Type::operator())>
+		{
+		public:
+			typedef function_traits<decltype(Type::operator())> base_type;
+			template<typename Type>
+			static bool BindType(const Type& target, handle& temp)
+			{
+				//bind lambda这里坑很多啊- - 
+				//		func_ptr_type p = target;
+				temp.normal_functor = reinterpret_cast<typename handle::func_type>(static_cast<func_ptr_type>(target));
+				return false;
+			}
+		};
+		//这里的const 版本是专门为了bind lambda...
+		template<typename ReturnType, typename ClassType, typename... FuncArgs>
+		class function_traits<ReturnType(ClassType::*)(FuncArgs...)const>
+		{
+		public:
+			using func_ptr_type = ReturnType(*)(FuncArgs...);
+			template<typename Type>
+			static bool BindType(const Type& target, handle& temp)
+			{
+				temp.object_func_ptr = reinterpret_cast<typename handle::object_type>(target);
+				return true;
+			}
+		};
+		template<typename ReturnType, typename... FuncArgs>
+		class function_traits<ReturnType(*)(FuncArgs...)>
+		{
+
+		public:
+			typedef ReturnType return_type;
+			template<typename Type>
+			static bool BindType(const Type& target, handle& temp)
+			{
+				temp.normal_functor = reinterpret_cast<typename handle::func_type>(target);
+				return false;
+			}
+		};
+		template<typename ReturnType, typename ClassType, typename... FuncArgs>
+		class function_traits<ReturnType(ClassType::*)(FuncArgs...)>
+		{
+		public:
+			typedef ReturnType return_type;
+			typedef ClassType class_type;
+			template<typename Type>
+			static bool BindType(const Type& target, handle& temp)
+			{
+				temp.object_func_ptr = reinterpret_cast<typename handle::object_type>(target);
+				return true;
+			}
+		};
+		//传入的类型不是普通函数指针不是成员函数的指针不是R()形式函数,那就是lambda
+		template<typename Type>
 		class function;
-		template<typename ReturnType,typename... FuncArgs>
+		template<typename ReturnType, typename... FuncArgs>
 		class function<ReturnType(FuncArgs...)>
 		{
 		public:
 			typedef ReturnType return_type;
-			function_impl<return_type, FuncArgs...> Functor;
-			
+			using func_ptr_type = ReturnType(*)(FuncArgs...);
 		public:
-			function<ReturnType(FuncArgs...)>() : Functor()
+			handle handler;
+			bool isObjectPtr;
+		public:
+			function()
 			{
 
 			}
 			template<typename Type>
-			function(const Type& ptr) : Functor(ptr)
+			function(const Type& target)
 			{
-
+				isObjectPtr = function_traits<Type>::BindType(target, handler);
 			}
 			template<typename Type>
-			function& operator= (const Type& ptr) 
+			function& operator=(const Type& target)
 			{
-				Functor = ptr;
-				return *this;
-
+				isObjectPtr = function_traits<Type>::BindType(target, handler);
 			}
-			template<typename... FuncArgs>
-			return_type operator()(FuncArgs... Args)
+			function(const function& target)
 			{
-				return Functor.operator()(Args...);
+				handler = target.handler;
+				isObjectPtr = target.isObjectPtr;
 			}
-		};
-		
-		template <typename typename ReturnType,typename ClassType,typename... FuncArg>
-		class function<ReturnType(ClassType::*)(FuncArg...)>
-		{
-		public:
-			typedef ClassType class_type;
-			typedef ReturnType return_type;
-			using ObjectPtr = return_type(class_type::*)(FuncArg...);
-			typedef ObjectPtr func_ptr_type;
-		public:
-			ObjectPtr functor;
-
-		public:
-			function()
+			template<typename FirstType, typename... PushArgs>
+			return_type operator()(const FirstType& firstArg, const PushArgs&... Args)
 			{
-				functor = nullptr;
+				if(isObjectPtr == true)
+				{
+					return ((reinterpret_cast<typename ztl::traits::type_traits::if_else< ztl::traits::type_traits::is_class<FirstType>::value, FirstType, empty>::type*>((void*)*(int*)&firstArg))->*(reinterpret_cast<return_type(typename ztl::traits::type_traits::if_else< ztl::traits::type_traits::is_class<FirstType>::value, FirstType, empty>::type::*)(PushArgs...)>(handler.object_func_ptr)))(Args...);
+				}
+				else
+				{
+					return reinterpret_cast<func_ptr_type>(handler.normal_functor)(firstArg, Args...);
+				}
 			}
-			function(nullptr_t)
+			return_type operator()()
 			{
-				functor = nullptr;
-			}
-			function(const ObjectPtr& funcPtr) :functor(funcPtr)
-			{
-		
-			}
-			function(const function& target) :/*obj(target.obj),*/ functor(target.functor)
-			{
-			}
-			function& operator=(const function& target)
-			{
-				functor = target.functor;
-				return *this;
-			}
-			function& operator=(const ObjectPtr& target)
-			{
-				functor = target;
-				return *this;
-			}
-			function& operator=(nullptr_t)
-			{
-				functor = nullptr;
-				return *this;
-			}
-			template<typename ClassObject,typename... PushFuncArgs>
-			return_type operator()(ClassObject object,PushFuncArgs... Args)
-			{
-				return (object->*functor)(Args...);
+				return reinterpret_cast<func_ptr_type>(handler.normal_functor)();
 			}
 		};
-		template <typename typename ReturnType,  typename... FuncArg>
-		class function<ReturnType(*)(FuncArg...)>
+		template<typename ReturnType, typename... FuncArgs>
+		class function<ReturnType(*)(FuncArgs...)>
 		{
 		public:
 			typedef ReturnType return_type;
-			using FuncPtr = return_type(*)(FuncArg...);
-			typedef FuncPtr func_ptr_type;
+			using func_ptr_type = ReturnType(*)(FuncArgs...);
 		public:
-			func_ptr_type functor;
-
+			func_ptr_type handler;
 		public:
 			function()
 			{
-				functor = nullptr;
-			}
-			function(nullptr_t)
-			{
-				functor = nullptr;
-			}
-			function(const func_ptr_type& funcPtr) :functor(funcPtr)
-			{
 
 			}
-			function(const function& target) : functor(target.functor)
+			function(const func_ptr_type& target)
 			{
+				handler = target;
 			}
-			function& operator=(const function& target)
-			{
-				functor = target.functor;
-				return *this;
-
-			}
+			template<typename Type>
 			function& operator=(const func_ptr_type& target)
 			{
-				functor = target;
-				return *this;
-
+				handler = target;
 			}
-			function& operator=(nullptr_t)
+			function(const function& target)
 			{
-				functor = nullptr;
-				return *this;
-
+				handler = target.handler;
 			}
-			template< typename... PushFuncArgs>
-			return_type operator()(PushFuncArgs... Args)
+			template<typename... PushArgs>
+			return_type operator()(const PushArgs&... Args)
 			{
-				return functor(Args...);
+				return handler(Args...);
 			}
 		};
+		template<typename ReturnType, typename ClassType, typename... FuncArgs>
+		class function<ReturnType(ClassType::*)(FuncArgs...)>
+		{
+		public:
+			typedef ReturnType return_type;
+			using func_ptr_type = ReturnType(ClassType::*)(FuncArgs...);
+		public:
+			func_ptr_type handler;
+		public:
+			function()
+			{
+
+			}
+			function(const func_ptr_type& target)
+			{
+				handler = target;
+			}
+			template<typename Type>
+			function& operator=(const func_ptr_type& target)
+			{
+				handler = target;
+			}
+			function(const function& target)
+			{
+				handler = target.handler;
+			}
+			template<typename FirstType, typename... PushArgs>
+			return_type operator()(const FirstType& firstArg, const PushArgs&... Args)
+			{
+				return (firstArg->*handler)(Args...);
+			}
+		};
+		/*template<typename ReturnType, typename ClassType, typename... FuncArgs>
+		class function<ReturnType(__stdcall ClassType::*)(FuncArgs...)>
+		{
+		public:
+			typedef ReturnType return_type;
+			using func_ptr_type = ReturnType(ClassType::*)(FuncArgs...);
+		public:
+			func_ptr_type handler;
+			const bool value = true;
+		public:
+			function()
+			{
+
+			}
+			function(const func_ptr_type& target)
+			{
+				handler = target;
+			}
+			template<typename Type>
+			function& operator=(const func_ptr_type& target)
+			{
+				handler = target;
+			}
+			function(const function& target)
+			{
+				handler = target.handler;
+			}
+			template<typename FirstType, typename... PushArgs>
+			return_type operator()(const FirstType& firstArg, const PushArgs&... Args)
+			{
+				return (firstArg->*handler)(Args...);
+			}
+		};*/
 	}
 }
