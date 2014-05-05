@@ -122,6 +122,7 @@
 //	}
 //	
 //}
+#include <functional>
 class A
 {
 public:
@@ -163,44 +164,55 @@ void testb()
 
 
 using namespace ztl::traits::type_traits;
-template<typename dst_type, typename src_type>
-dst_type union_cast(src_type src)
-{
-	union
-	{
-		src_type s;
-		dst_type d;
-	}u;
-	u.s = src;
-	return u.d;
-};
+
 
 
 int main()
 {
-	auto i = [](int a, int b)->int
+	/*auto i = [](int a, int b)->int
 	{
 		return a;
 	};
 	ztl::functional::function<int(int, int)>a=i;
-	auto k =a(1, 3);
-	ztl::functional::function<void(int)>b= &print_num;
-	b(3);
-	ztl::functional::function<int(double)>c=&test;
-	c(4);
-	ztl::functional::function<int()>d=&testb;
-	d();
+	auto k = a(1, 3);
+	Foo c(1);
+	ztl::functional::function<bool(int, int)>b = &c;
+	b(1, 3);*/
+	
+					 
+	//ztl::functional::function<void(int)>b= &print_num;
+	//b(3);
+	//ztl::functional::function<int(double)>c=&test;
+	//c(4);
+	//ztl::functional::function<int()>d=&testb;
+	//d();
 	//ztl::functional::function<int(Foo*,int)>e=&Foo::print_add;
 	//Foo ef(1);
 	//e(&ef, 1);
-	ztl::functional::function<decltype(&test)>g=&test;
-	g(4);
-	ztl::functional::function<bool(Foo*,int,int)>h=&Foo::operator();
-	Foo hf(1);
-	h(&hf, 3,1);
-	ztl::functional::function<decltype(&Foo::print_add)>er;
-	er = &Foo::print_add;
-	Foo eg(1);
-	er(&eg, 1);
+	//ztl::functional::function<decltype(&test)>g=&test;
+	//g(4);
+	//ztl::functional::function<bool(Foo*,int,int)>h=&Foo::operator();
+	//Foo hf(1);
+	//h(&hf, 3,1);
+	//ztl::functional::function<decltype(&Foo::print_add)>er;
+	//er = &Foo::print_add;
+	//Foo eg(1);
+	//er(&eg, 1);
+
+	//ztl::functional::function<void(int)> f_display = &print_num;
+	//f_display(-9);
+
+	//// 保存 lambda 表达式
+	//ztl::functional::function<void()> f_display_42 = []()
+	//{
+	//	print_num(42);
+	//};
+	//f_display_42();
+
+	//
+	// //保存成员函数
+	//ztl::functional::function<void(const Foo*, int)> f_add_display = &Foo::print_add;
+	//Foo foo(314159);
+	//f_add_display(&foo, 1);
 	return 0;
 }
