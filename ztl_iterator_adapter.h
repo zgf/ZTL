@@ -41,7 +41,7 @@ namespace ztl
 				}
 				mySelf& operator=(value_type&& Val)
 				{
-					containerPtr->push_front(std::forward<value_type>(Val));
+					containerPtr->push_front(ztl::traits::type_traits::forward<value_type>(Val));
 					return *this;
 				}
 				/*
@@ -54,7 +54,7 @@ namespace ztl
 			public:
 				static mySelf make_front_insert_iterator(container_type& target)
 				{
-					return std::move(mySelf(target));
+					return ztl::traits::type_traits::move(mySelf(target));
 				}
 			};
 			template<typename BackInsertContainer>
@@ -90,13 +90,13 @@ namespace ztl
 				}
 				mySelf& operator=(value_type&& Val)
 				{
-					containerPtr->push_back(std::forward<value_type>(Val));
+					containerPtr->push_back(ztl::traits::type_traits::forward<value_type>(Val));
 					return *this;
 				}
 			public:
 				static mySelf make_back_insert_iterator(container_type& target)
 				{
-					return std::move(mySelf(target));
+					return ztl::traits::type_traits::move(mySelf(target));
 				}
 			};
 			template<typename InsertContainer>
@@ -142,7 +142,7 @@ namespace ztl
 			public:/*self*/
 				static mySelf make__insert_iterator(container_type& targetContainer, iterator_type& targetIterator)
 				{
-					return std::move(mySelf(targetContainer,targetIterator));
+					return ztl::traits::type_traits::move(mySelf(targetContainer, targetIterator));
 				}
 			};
 			template<typename BidirectionalIterator,
@@ -248,7 +248,7 @@ namespace ztl
 				}
 				static mySelf make_reverse_iterator(iterator_type&target)
 				{
-					return std::move(mySelf(target));
+					return ztl::traits::type_traits::move(mySelf(target));
 				}
 			};
 			template<typename ElementType,typename CharType = char,typename CharTraits=std::char_traits<CharType>>
@@ -429,7 +429,7 @@ namespace ztl
 			public: /*IIterator*/
 				reference_type			operator*()
 				{
-					return std::move(*iterator);
+					return ztl::traits::type_traits::move(*iterator);
 				}
 			public:/*IForwardIterator*/
 				mySelf&					operator++()
@@ -461,7 +461,7 @@ namespace ztl
 				}
 				static mySelf& make_move_iterator(iterator_type& target)
 				{
-					return std::move(mySelf(target));
+					return ztl::traits::type_traits::move(mySelf(target));
 				}
 			};
 			template<typename IteratorType,typename ElementType>

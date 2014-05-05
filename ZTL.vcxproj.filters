@@ -23,9 +23,6 @@
     <ClInclude Include="ztl_concept_base.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ztl_Contract.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ztl_wrapper.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -42,6 +39,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ztl_allocator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ztl_functional.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -82,10 +82,10 @@
   <ItemGroup>
     <ClInclude Include="ztl_allocator.h" />
     <ClInclude Include="ztl_allocator_base.h" />
+    <ClInclude Include="ztl_functional.h" />
     <ClInclude Include="ztl_iterator_adapter.h" />
     <ClInclude Include="ztl_concept.h" />
     <ClInclude Include="ztl_concept_base.h" />
-    <ClInclude Include="ztl_Contract.h" />
     <ClInclude Include="ztl_type_traits.h" />
     <ClInclude Include="ztl_wrapper.h" />
   </ItemGroup>

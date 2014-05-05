@@ -67,7 +67,7 @@ namespace ztl
 				{
 					IteratorType temp(*this);
 					++(*this);
-					return std::move(temp);
+					return ztl::traits::type_traits::move(temp);
 				}
 			};
 			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
@@ -81,7 +81,7 @@ namespace ztl
 				{
 					IteratorType temp(*this);
 					--(*this);
-					return std::move(temp);
+					return ztl::traits::type_traits::move(temp);
 				}
 			};
 			template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
@@ -96,20 +96,20 @@ namespace ztl
 				friend IteratorType operator+(const IteratorType& Iter, different_type n)
 				{
 					IteratorType tempIter = Iter;
-					return std::move(tempIter += n);
+					return ztl::traits::type_traits::move(tempIter += n);
 				}
 				friend IteratorType operator+(const different_type n, const IteratorType& Iter)
 				{
-					return std::move(Iter + n);
+					return ztl::traits::type_traits::move(Iter + n);
 				}
 				friend IteratorType operator-(const IteratorType& Iter, different_type n)
 				{
 					IteratorType tempIter = Iter;
-					return std::move(tempIter -= n);
+					return ztl::traits::type_traits::move(tempIter -= n);
 				}
 				friend IteratorType operator-(const different_type n, const IteratorType& Iter)
 				{
-					return std::move(Iter - n);
+					return ztl::traits::type_traits::move(Iter - n);
 				}
 				reference_type operator[](const different_type n)
 				{

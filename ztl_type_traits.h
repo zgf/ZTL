@@ -151,11 +151,7 @@ namespace ztl
 			{
 				
 			};*/
-			/*template<typename FromType, typename ToType>
-			struct is_convertible:is_convertible_to<FromType, ToType>
-			{
-
-			};*/
+			
 			template<typename BaseType, typename DerivedType>
 			struct is_base_of : bool_predicate<__is_base_of(BaseType, DerivedType)>
 			{
@@ -323,7 +319,7 @@ namespace ztl
 			template<typename Type>
 			struct remove_reference
 			{
-
+				typedef Type type;
 			};
 			template<typename Type>
 			struct remove_reference<Type&>
@@ -365,12 +361,13 @@ namespace ztl
 			COMPLIER_COMPLETE(is_trivial);
 			COMPLIER_COMPLETE(is_literal_type);
 			COMPLIER_COMPLETE(is_standard_layout);
-			COMPLIER_COMPLETE_TwoArg(is_convertible_to, FromType, ToType);
+			
 			COMPLIER_COMPLETE_TwoArg(is_nothrow_assignable, ToType, FromType);
 			COMPLIER_COMPLETE_TwoArg(is_trivially_assignable, ToType, FromType);
 			COMPLIER_COMPLETE_TwoArg(is_constructible, Type, ArgsPack);
 			COMPLIER_COMPLETE_TwoArg(is_trivially_constructible, Type, ArgsPack);
 			COMPLIER_COMPLETE_TwoArg(is_nothrow_constructible, Type, ArgsPack);
+			COMPLIER_COMPLETE_TwoArg(is_convertible_to, FromType, ToType);
 	//		COMPLIER_COMPLETE(is_assignable);
 	//		COMPLIER_COMPLETE(is_constructible);
 	//		COMPLIER_COMPLETE(is_copy_assignable);
@@ -396,6 +393,11 @@ namespace ztl
 		//	COMPLIER_COMPLETE(is_nothrow_move_assignable);
 		//	COMPLIER_COMPLETE(is_nothrow_move_constructible);
 #undef COMPLIER_COMPLETE
+			template<typename FromType, typename ToType>
+			struct is_convertible :is_convertible_to<FromType, ToType>
+			{
+
+			};
 			template<typename Type>
 			struct is_float_impl : false_type
 			{
@@ -519,12 +521,32 @@ namespace ztl
 			{
 
 			};
+
+			template<typename Type>
+			struct is_lvalue_reference :false_type
+			{
+
+			};
+			template<typename Type>
+			struct is_lvalue_reference<Type&> :true_type
+			{
+
+			};
+			template<typename Type>
+			struct is_rvalue_reference :false_type
+			{
+
+			};
+			template<typename Type>
+			struct is_rvalue_reference<Type&&> :true_type
+			{
+
+			};
 			template<typename Type>
 			struct is_integral:false_type
 			{
 
 			};
-
 #define IS_INTEGRAL(int_type) \
 			template<>\
 			struct is_integral<int_type> : true_type\
@@ -590,6 +612,7 @@ namespace ztl
 			{
 
 			};
+
 			/*类型退化*/
 			template<typename Type>
 			struct decay
@@ -657,6 +680,33 @@ namespace ztl
 			{
 				typedef typename replace_type_impl<Tc, Ts, Tr, std::is_same<Tc, Ts>::value>::type type;
 			};
+			/*右值转发*/
+			template<typename Type> inline
+				typename remove_reference<Type>::type&&
+				move(Type&& target)
+			{
+					return static_cast<typename remove_reference<Type>::type&&>(target);
+			};
+
+			template<class Type> inline
+				Type&& forward(typename remove_reference<Type>::type& Arg)
+			{
+					return static_cast<Type&&>(Arg);
+			};
+
+			template<class Type> inline
+				Type&& forward(typename remove_reference<Type>::type&& Arg)
+			{
+					static_assert(!is_lvalue_reference<Type>::value, "bad forward call");
+					return (static_cast<Type&&>(Arg));
+			};
+			template<typename Type>
+			void swap(Type&& left, Type&& right)
+			{
+				auto temp = move(left);
+				right = move(left);
+				left = move(temp);
+			}
 		}
 	}
 	

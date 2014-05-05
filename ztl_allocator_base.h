@@ -246,7 +246,7 @@ namespace ztl
 						if (findIter == FixObjectMap.end())
 						{
 
-							FixObjectMap.insert(std::make_pair(nByte, std::move(FixObjectAllocator(nByte, BlockCount(nByte)))));
+							FixObjectMap.insert(std::make_pair(nByte, ztl::traits::type_traits::move(FixObjectAllocator(nByte, BlockCount(nByte)))));
 						}
 						findIter = FixObjectMap.find(nByte);
 						return findIter->second.allocate();*/

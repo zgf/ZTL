@@ -9,6 +9,8 @@
 #include "ztl_allocator.h"
 #include <ctime>
 #include <string>
+#include "ztl_wrapper.h"
+#include "ztl_functional.h"
 //约定 类型名 pascal式
 // 类成员 驼峰式+前缀后缀
 // 变量名 驼峰式+前缀后缀
@@ -36,7 +38,8 @@
 //	{
 //		namespace tuples
 //		{
-//
+//			tuple完成
+//			pair triple完成
 //		}
 //	}
 //	namespace concept
@@ -50,6 +53,10 @@
 //
 //		}
 //		namespace concept_container
+//		{
+//
+//		}
+//		namespace concept_checker
 //		{
 //
 //		}
@@ -115,95 +122,86 @@
 //	}
 //	
 //}
-using std::cout;
-using std::endl;
- typedef char(&rn3)[3];
- rn3& func()
+class A
 {
-	char a[3];
-	
-	rn3 r= a;
-	cout << "r" << &r << endl;
-	
-	return r;
-}
-using namespace ztl::traits::type_traits;
-union Class
-{
-	int a;
-	int b;
+public:
+	int func(int a)
+	{
+		return 1;
+	}
 };
+struct Foo
+{
+	Foo(int num) : num_(num)
+	{
+	}
+	int print_add(int i) 
+	{
+		std::cout << num_ + i << '\n';
+		return 0;
+	}
+	bool operator()(int a, int b)
+	{
+		return a == b;
+	}
+	int num_;
+};
+
+void print_num(int i)
+{
+	std::cout << i << '\n';
+}
+int test(double a)
+{
+	std::cout << a << std::endl;
+	return 0;
+}
+void testb()
+{
+	std::cout << "succ";
+}
+#include <functional>
+
+
+using namespace ztl::traits::type_traits;
+template<typename dst_type, typename src_type>
+dst_type union_cast(src_type src)
+{
+	union
+	{
+		src_type s;
+		dst_type d;
+	}u;
+	u.s = src;
+	return u.d;
+};
+
+
 int main()
 {
-	Class test;
-	test.b = 10;
-	using UnionPtr = int Class::*;
-	UnionPtr p = &Class::b;
-	cout<<test.*p;
-	//std::string i[10];
-	//fun(i);
-	//rn3& i = func();
-	//cout << &i << endl;
-	//std::cout << ztl::traits::type_traits::is_base_of<BaseB, BaseA>::value;
-	//using functype = int(BaseB::*);
-	//decay
-	/*auto i =&BaseB::fooFunc;
-	std::cout << ztl::traits::type_traits::is_member_function_pointer<decltype(i)>::value << std::endl;
-	std::cout << std::is_enum<Tag>::value<< std::endl;
-	std::cout << ztl::traits::type_traits::is_class<Tag>::value << std::endl;*/
-	
-	//std::cout << bool_predicate<is_convertible<BaseB, BaseA>::value>::value<<std::endl;
-	//std::cout << is_base_of<BaseB, BaseA>::value << std::endl;
-	//std::cout<<ztl::traits::type_traits::is_convertible<long, int>::value;
-	auto start1 = clock();
-	//for(auto i = 40000; i < 5000000; i++)
-	//{
-	//	ztl::memory::allocator::allocator<int>::raw_allocate(i  / 40000 );
-	//	//operator new(i / 10000/ 8 + 1);
-	//}
-	//auto end1 = clock();
-	////std::cout << (double)end1 - start1 << std::endl;
-	//auto start2 = clock();
-	//for(auto i = 40000; i < 5000000; i++)
-	//{
-	//	//ztl::memory::allocator::allocator<int>::raw_allocate(i / 10000 / 8 + 1);
-	//	alloc_r(i);
-	//}
-	//auto end2 = clock();
-	////std::cout << (double)end2 - start2 << std::endl;
-	//std::cout << ((double)end1 - start1)/((double)end2 - start2) << std::endl;
-
-	//std::cout << (int)a1<<std::endl;
-	//std::cout << (int)a2<<std::endl;
-	//std::cout << (int)a2 - (int)a1;
-	//std::string a;
-	//ztl::Nullable<int*> test(new int(3));
-	//ztl::Nullable<std::vector<int>> testb(ztl::null);
-	//int* a = test;
-	//test == ztl::null;
-	/*try
+	auto i = [](int a, int b)->int
 	{
-		std::vector<int> a = testb;
-	}
-	catch (ztl::Exception& e)
-	{
-		std::cout<<e.What();
-	}
-	*/
-
-	//Vist<LexTag::Unkown> Visit3();
-	//Visit3();
-	//func<LexTag::CharSet>();
-	//func<LexTag::Unkown>();
-	ztl::wrapper::tuples::pair<int, int> ATest(4, 5);
-	ztl::wrapper::tuples::pair<int, int> BTest(4, 5);
-	/*if (ATest == BTest)
-	{
-		ATest.second = 6;
-		if(ATest != BTest)
-		{
-		}
-		BTest = ATest;
-	}*/
+		return a;
+	};
+	ztl::functional::function<int(int, int)>a=i;
+	auto k =a(1, 3);
+	ztl::functional::function<void(int)>b= &print_num;
+	b(3);
+	ztl::functional::function<int(double)>c=&test;
+	c(4);
+	ztl::functional::function<int()>d=&testb;
+	d();
+	ztl::functional::function<int(Foo*,int)>e=&Foo::print_add;
+	Foo ef(1);
+	e(&ef, 1);
+	ztl::functional::function<decltype(&test)>g=&test;
+	g(4);
+	ztl::functional::function<bool(Foo*,int,int)>h=&Foo::operator();
+	Foo hf(1);
+	h(&hf, 3,1);
+	ztl::functional::function<decltype(&Foo::print_add)>er;
+	er = &Foo::print_add;
+	Foo eg(1);
+	er(&eg, 1);
 	return 0;
 }
