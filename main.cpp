@@ -1,14 +1,9 @@
-#include <list>
 #include <iostream>
-#include <algorithm>
-#include <iterator>
-#include <vector>
+
 #include "ztl_concept.h"
 #include "ztl_type_traits.h"
 #include "ztl_iterator_adapter.h"
 #include "ztl_allocator.h"
-#include <ctime>
-#include <string>
 #include "ztl_wrapper.h"
 #include "ztl_functional.h"
 //约定 类型名 pascal式
@@ -131,22 +126,27 @@ public:
 		return 1;
 	}
 };
-struct Foo
-{
-	Foo(int num) : num_(num)
-	{
-	}
-	int  print_add(int i) 
-	{
-		std::cout << num_ + i << '\n';
-		return 0;
-	}
-	bool operator()(int a, int b)
-	{
-		return a == b;
-	}
-	int num_;
-};
+//struct Foo
+//{
+//	Foo(int num) : num_(num)
+//	{
+//	}
+//	int   print_add(int i) 
+//	{
+//		std::cout << num_ + i << '\n';
+//		return 0;
+//	}
+//	int   print_n(int i,double b,float c,int d)
+//	{
+//		std::cout << num_ + i << '\n';
+//		return 0;
+//	}
+//	bool operator()(int a, int b)
+//	{
+//		return a == b;
+//	}
+//	int num_;
+//};
 
 void print_num(int i)
 {
@@ -165,27 +165,49 @@ void testb()
 
 using namespace ztl::traits::type_traits;
 
+struct Foo
+{
+	Foo()
+	{
+	}
+	int a;
+	Foo(const Foo&)
+	{
+		std::cout << "Copy Foo" << std::endl;
+	}
 
+	void operator()()
+	{
+		std::cout << "Hello World" << std::endl;
+		a = 0;
+		
+	}
+};
 
+void func(ztl::functional::function<void()> fr)
+{
+	fr();
+}
 int main()
 {
-	/*auto i = [](int a, int b)->int
+	/*Foo c(1);
+	ztl::functional::function<bool(int, int)>b = &c;
+	b(1, 3);
+	auto i = [](int a, int b)->int
 	{
 		return a;
 	};
-	ztl::functional::function<int(int, int)>a=i;
+	ztl::functional::function<int(int, int)>a = i;
 	auto k = a(1, 3);
-	Foo c(1);
-	ztl::functional::function<bool(int, int)>b = &c;
-	b(1, 3);*/
 	
-					 
-	//ztl::functional::function<void(int)>b= &print_num;
-	//b(3);
-	//ztl::functional::function<int(double)>c=&test;
-	//c(4);
-	//ztl::functional::function<int()>d=&testb;
-	//d();
+
+
+	ztl::functional::function<void(int)>b= &print_num;
+	b(3);*/
+	////ztl::functional::function<int(double)>c=&test;
+	////c(4);
+	////ztl::functional::function<int()>d=&testb;
+	////d();
 	//ztl::functional::function<int(Foo*,int)>e=&Foo::print_add;
 	//Foo ef(1);
 	//e(&ef, 1);
@@ -209,10 +231,16 @@ int main()
 	//};
 	//f_display_42();
 
-	//
-	// //保存成员函数
-	//ztl::functional::function<void(const Foo*, int)> f_add_display = &Foo::print_add;
-	//Foo foo(314159);
-	//f_add_display(&foo, 1);
+	
+	 //保存成员函数
+	/*ztl::functional::function<void(const Foo*, int)> f_add_display = &Foo::print_add;
+	const Foo foo(314159);
+	f_add_display(&foo, 1);*/
+	ztl::functional::function<void()> fr = &Foo();
+	func(fr);
+
+	//Foo a(3);
+	//auto i =ztl::functional::bind(&Foo::print_n, &a, ztl::functional::_1,ztl::functional::_2,ztl::functional::_3,3);
+	//i(3, 4, 5);
 	return 0;
 }

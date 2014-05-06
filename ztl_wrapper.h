@@ -109,28 +109,28 @@ namespace ztl
 				typedef tuple<FuncArg...> base_type;
 				typedef tuple_value<current_type> wrapper_type;
 			public:
-				tuple() :current_element(wrapper_type>())
+				tuple() :current_element(wrapper_type())
 				{
 
 				}
-				tuple(CurrentType&& current, FuncArg&&...  Arg) : tuple<FuncArg...>(Arg...), current_element(ztl::traits::type_traits::forward<wrapper_type>(current))
+				/*tuple(CurrentType&& current, FuncArg&&...  Arg) : tuple<FuncArg...>(Arg...), current_element(ztl::traits::type_traits::forward<wrapper_type>(current))
+				{
+
+				}*/
+				tuple(const CurrentType& current,const FuncArg&...  Arg) : tuple<FuncArg...>(Arg...), current_element(current)
 				{
 
 				}
-				tuple(CurrentType& current, FuncArg&...  Arg) : tuple<FuncArg...>(Arg...), current_element(current)
+				tuple(const tuple& right) : base_type(right.get_rest()), current_element(right.current_element.value)
 				{
 
 				}
-				tuple(const tuple& right) : base_type(right.get_rest()), current_element(right.current_element.val)
-				{
-
-				}
-				tuple(tuple&& right) :
+				/*tuple(tuple&& right) :
 					base_type(std::forward<base_type>(right.get_rest())),
 					current_element(std::forward<wrapper_type>(right.current_element))
 				{
 
-				}
+				}*/
 				mySelf& operator=(mySelf right)
 				{
 					swap(right);
