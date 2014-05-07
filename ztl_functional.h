@@ -3,6 +3,8 @@ namespace ztl
 {
 	namespace functional
 	{
+		using namespace ztl::traits::type_traits;
+		using namespace ztl::wrapper::tuples;
 		class empty
 		{
 		};
@@ -38,12 +40,12 @@ namespace ztl
 			typedef function_traits<decltype(&Type::operator())> base_type;
 			typedef typename  base_type::func_ptr_type func_ptr_type;
 			template<typename Type>
-			static bool BindType(const Type& target, handle& temp)
+			static bool BindType(Type&& target, handle& temp)
 			{
-				//bind lambda这里坑很多啊- - 
+				//bind lambda这里坑很多啊- -
 				//		func_ptr_type p = target;只有static可以转换
 				//bool a = std::is_pointer<Type>::value;
-				temp.normal_functor = reinterpret_cast<typename handle::func_type>(static_cast<func_ptr_type>(target));
+				temp.normal_functor = reinterpret_cast<typename handle::func_type>(static_cast<func_ptr_type>(std::forward<Type&&>(target)));
 				return false;
 			}
 		};
@@ -54,23 +56,22 @@ namespace ztl
 		public:
 			using func_ptr_type = ReturnType(*)(FuncArgs...);
 			template<typename Type>
-			static bool BindType(const Type& target, handle& temp)
+			static bool BindType(Type&& target, handle& temp)
 			{
-				temp.member_funtor.object_func_ptr = reinterpret_cast<typename handle::object_type>(target);
+				temp.member_funtor.object_func_ptr = reinterpret_cast<typename handle::object_type>(std::forward<Type&&>(target));
 				return true;
 			}
 		};
 		template<typename ReturnType, typename... FuncArgs>
 		class function_traits<ReturnType(*)(FuncArgs...)>
 		{
-
 		public:
-			using func_ptr_type =  ReturnType(*)(FuncArgs...);
+			using func_ptr_type = ReturnType(*)(FuncArgs...);
 			typedef ReturnType return_type;
 			template<typename Type>
-			static bool BindType(const Type& target, handle& temp)
+			static bool BindType(Type&& target, handle& temp)
 			{
-				temp.normal_functor = reinterpret_cast<typename handle::func_type>(target);
+				temp.normal_functor = reinterpret_cast<typename handle::func_type>(std::forward<Type&&>(target));
 				return false;
 			}
 		};
@@ -82,9 +83,9 @@ namespace ztl
 			using func_ptr_type = ReturnType(*)(FuncArgs...);
 			typedef ClassType class_type;
 			template<typename Type>
-			static bool BindType(const Type& target, handle& temp)
+			static bool BindType(Type&& target, handle& temp)
 			{
-				temp.member_funtor.object_func_ptr = reinterpret_cast<typename handle::object_type>(target);
+				temp.member_funtor.object_func_ptr = reinterpret_cast<typename handle::object_type>(std::forward<Type&&>(target));
 				return true;
 			}
 		};
@@ -97,9 +98,9 @@ namespace ztl
 			//using func_ptr_type = ReturnType(*)(FuncArgs...);
 			//typedef ClassType class_type;
 			template<typename Type>
-			static bool BindType(const Type& target, handle& temp)
+			static bool BindType(Type&& target, handle& temp)
 			{
-				temp.member_funtor.object_ptr = new ReturnType(*target);
+				temp.member_funtor.object_ptr = new ReturnType(*std::forward<Type&&>(target));
 				temp.member_funtor.object_func_ptr = reinterpret_cast<typename handle::object_type>(&functor_type::operator());
 				return true;
 			}
@@ -107,6 +108,66 @@ namespace ztl
 		//传入的类型不是普通函数指针不是成员函数的指针不是R()形式函数,那就是lambda
 		template<typename Type>
 		class function;
+		template<typename Type>
+		class function<Type*>
+		{
+		public:
+			typedef decltype(&Type::operator()) func_ptr_type;
+			typedef typename function<func_ptr_type>::return_type return_type;
+		public:
+			handle handler;
+			bool isObjectPtr;
+		public:
+			function()
+			{
+			}
+			template<typename Type>
+			function(Type&& target)
+			{
+				handler.member_funtor.object_ptr = nullptr;
+				//这里不能用Type&&
+				isObjectPtr = function_traits<Type>::BindType(std::forward<Type&&>(target), handler);
+			}
+			template<typename Type>
+			function& operator=(Type&& target)
+			{
+				handler.member_funtor.object_ptr = nullptr;
+				isObjectPtr = function_traits<Type>::BindType(std::forward<Type&&>(target), handler);
+			}
+			function(const function& target)
+			{
+				handler = target.handler;
+				isObjectPtr = target.isObjectPtr;
+			}
+			template<typename FirstType, typename... PushArgs>
+			return_type operator()(FirstType&& firstArg, PushArgs&&... Args)
+			{
+				if(handler.member_funtor.object_ptr == nullptr)
+				{
+					using functor_type = return_type(__thiscall*)(void*, PushArgs...);
+					return union_cast<functor_type>(handler.member_funtor.object_func_ptr)((void*)*(int*)&firstArg, std::forward<PushArgs&&>(Args)...);
+				}
+				else
+				{
+					////说明第一个参数不是调用者
+					using functor_type = return_type(__thiscall*)(void*, FirstType, PushArgs...);
+					return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(handler.member_funtor.object_ptr, firstArg, std::forward<PushArgs&&>(Args)...);
+				}
+			}
+			return_type operator()()
+			{
+				if(handler.member_funtor.object_ptr == nullptr)
+				{
+					return reinterpret_cast<func_ptr_type>(handler.normal_functor)();
+				}
+				else
+				{
+					using functor_type = ReturnType(__thiscall*)(void*);
+					return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(handler.member_funtor.object_ptr);
+				}
+			}
+		};
+		//添加对仿函数支持.对于 function<dectyple(&functor)>(&functor)
 		template<typename ReturnType, typename... FuncArgs>
 		class function<ReturnType(FuncArgs...)>
 		{
@@ -119,19 +180,19 @@ namespace ztl
 		public:
 			function()
 			{
-
 			}
 			template<typename Type>
-			function(const Type& target)
+			function(Type&& target)
 			{
 				handler.member_funtor.object_ptr = nullptr;
-				isObjectPtr = function_traits<Type>::BindType(target, handler);
+				//这里不能用Type&&
+				isObjectPtr = function_traits<Type>::BindType(std::forward<Type&&>(target), handler);
 			}
 			template<typename Type>
-			function& operator=(const Type& target)
+			function& operator=(Type&& target)
 			{
 				handler.member_funtor.object_ptr = nullptr;
-				isObjectPtr = function_traits<Type>::BindType(target, handler);
+				isObjectPtr = function_traits<Type>::BindType(std::forward<Type&&>(target), handler);
 			}
 			function(const function& target)
 			{
@@ -139,7 +200,7 @@ namespace ztl
 				isObjectPtr = target.isObjectPtr;
 			}
 			template<typename FirstType, typename... PushArgs>
-			return_type operator()(const FirstType& firstArg, const PushArgs&... Args)
+			return_type operator()(FirstType&& firstArg, PushArgs&&... Args)
 			{
 				if(isObjectPtr == true)
 				{
@@ -148,22 +209,22 @@ namespace ztl
 						////说明第一个参数是调用的class
 						//这种写法对fastcall就煞笔了.只能用于thiscall调用
 						//从这里可以看出对象的实际类型根本不影响函数调用,只要传入的是一个课转换为void*类型的类型即可
-						//return ((reinterpret_cast<typename ztl::traits::type_traits::if_else< ztl::traits::type_traits::is_class<FirstType>::value, FirstType, empty>::type*>((void*)*(int*)&firstArg))->*(reinterpret_cast<return_type(typename ztl::traits::type_traits::if_else< ztl::traits::type_traits::is_class<FirstType>::value, FirstType, empty>::type::*)(PushArgs...)>(handler.member_funtor.object_func_ptr)))(Args...);
+						//return ((reinterpret_cast<typename if_else< is_class<FirstType>::value, FirstType, empty>::type*>((void*)*(int*)&firstArg))->*(reinterpret_cast<return_type(typename if_else< is_class<FirstType>::value, FirstType, empty>::type::*)(PushArgs...)>(handler.member_funtor.object_func_ptr)))(Args...);
 						//thiscall该fastcall就支持fastcall了
 						using functor_type = ReturnType(__thiscall*)(void*, PushArgs...);
-						return union_cast<functor_type>(handler.member_funtor.object_func_ptr)((void*)*(int*)&firstArg, Args...);
+						return union_cast<functor_type>(handler.member_funtor.object_func_ptr)((void*)*(int*)&firstArg, std::forward<PushArgs&&>(Args)...);
 					}
 					else
 					{
 						//说明第一个参数不是调用者
-						using functor_type = ReturnType(__thiscall*)(void*,FuncArgs...);
-						return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(handler.member_funtor.object_ptr, firstArg, Args...);
-						//return ((reinterpret_cast<typename ztl::traits::type_traits::if_else< ztl::traits::type_traits::is_class<FirstType>::value, FirstType, empty>::type*>((void*)*(int*)&handler.member_funtor.object_ptr))->*(reinterpret_cast<return_type(typename ztl::traits::type_traits::if_else< ztl::traits::type_traits::is_class<FirstType>::value, FirstType, empty>::type::*)(FirstType, PushArgs...)>(handler.member_funtor.object_func_ptr)))(firstArg,Args...);
+						using functor_type = ReturnType(__thiscall*)(void*, FuncArgs...);
+						return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(handler.member_funtor.object_ptr, firstArg, std::forward<PushArgs&&>(Args)...);
+						//return ((reinterpret_cast<typename if_else< is_class<FirstType>::value, FirstType, empty>::type*>((void*)*(int*)&handler.member_funtor.object_ptr))->*(reinterpret_cast<return_type(typename if_else< is_class<FirstType>::value, FirstType, empty>::type::*)(FirstType, PushArgs...)>(handler.member_funtor.object_func_ptr)))(firstArg,Args...);
 					}
 				}
 				else
 				{
-					return reinterpret_cast<func_ptr_type>(handler.normal_functor)(firstArg, Args...);
+					return reinterpret_cast<func_ptr_type>(handler.normal_functor)(firstArg, std::forward<PushArgs&&>(Args)...);
 				}
 			}
 			return_type operator()()
@@ -177,7 +238,6 @@ namespace ztl
 					using functor_type = ReturnType(__thiscall*)(void*, FuncArgs...);
 					return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(handler.member_funtor.object_ptr);
 				}
-				
 			}
 		};
 
@@ -197,7 +257,6 @@ namespace ztl
 			{
 				handler = target;
 			}
-			template<typename Type>
 			function& operator=(const func_ptr_type& target)
 			{
 				handler = target;
@@ -207,9 +266,9 @@ namespace ztl
 				handler = target.handler;
 			}
 			template<typename... PushArgs>
-			return_type operator()(const PushArgs&... Args)
+			return_type operator()(PushArgs&&... Args)
 			{
-				return handler(Args...);
+				return handler(std::forward<PushArgs&&>(Args)...);
 			}
 		};
 		template<typename ReturnType, typename ClassType, typename... FuncArgs>
@@ -223,7 +282,6 @@ namespace ztl
 		public:
 			function()
 			{
-
 			}
 			function(const func_ptr_type& target)
 			{
@@ -239,16 +297,19 @@ namespace ztl
 				handler = target.handler;
 			}
 			template<typename FirstType, typename... PushArgs>
-			return_type operator()(const FirstType& firstArg, const PushArgs&... Args)
+			return_type operator()(FirstType&& firstArg, PushArgs&&... Args)
 			{
-				return (firstArg->*handler)(Args...);
+				return (firstArg->*handler)(std::forward<PushArgs&&>(Args)...);
 			}
 		};
 
 		template<int index>
 		class placeholder
 		{
-
+		public:
+			placeholder()
+			{
+			}
 		};
 		static placeholder<1>	_1;
 		static placeholder<2>	_2;
@@ -260,67 +321,124 @@ namespace ztl
 		static placeholder<8>	_8;
 		static placeholder<9>	_9;
 
-		template<typename Type, typename... CallArgs>
-		class bind_traits
+		//占位符判断函数
+		template<typename Type>
+		struct is_placeholder;
+		template<typename Type>
+		struct is_placeholder
 		{
-			
+			static const size_t arg_index = 0;
+			static const bool value = false;
 		};
-		template<typename... CallArgs, typename... BindArgs>
-		class bind_traits<ztl::wrapper::tuples::tuple<BindArgs...>, ztl::wrapper::tuples::tuple<CallArgs...>>
+		template<size_t index>
+		struct is_placeholder<placeholder<index>>
 		{
-		public:
-			typedef ztl::wrapper::tuples::tuple<BindArgs...> bind_list_type;
-			typedef ztl::wrapper::tuples::tuple<CallArgs...> call_list_type;
-		public:
-
-			bind_traits()
-			{
-
-			}
-			/*template<typename ReturnType,typename PtrType>
-			ReturnType Invoke(const PtrType& func_ptr,const bind_list_type& bind_list,const call_list_type& call_list)
-			{
-				func_ptr(arg_trait<BindArgs>(call_list)...)
-				
-			}*/
-			//template<typename Type>
-
+			static const size_t arg_index = index;
+			static const bool value = true;
+		};
+		template<size_t index>
+		struct is_placeholder<placeholder<index>&>
+		{
+			static const size_t arg_index = index;
+			static const bool value = true;
 		};
 
-		template<typename FuncType,typename... BindFuncArgs>
+		//编译时获取tuple的size
+		template<typename... TupleArgs>
+		struct get_tuple_size;
+		template<typename... TupleArgs>
+		struct get_tuple_size<tuple<TupleArgs...>>
+		{
+			static const size_t tuple_size = sizeof...(TupleArgs);
+		};
+		//整形序列生成器
+		template<int ...Sequence>
+		struct sequence_wrapper
+		{
+		};
+		template<size_t tuple_size, size_t... Sequence>
+		struct generator;
+
+		template<size_t tuple_size, size_t... Sequence>
+		struct generator :generator<tuple_size - 1, tuple_size - 1, Sequence...>
+		{
+		};
+		template<size_t... Sequence>
+		struct generator<0, Sequence...>
+		{
+			typedef sequence_wrapper<Sequence...> type;
+		};
+		template<size_t index, typename... Args>
+		struct tuple_index_type;
+		template<size_t index, typename... Args>
+		struct tuple_index_type<index, tuple<Args...>>
+		{
+			typedef typename get_tuple_index_helper<sizeof...(Args), index, typename tuple<Args...>::current_type, Args...>::type type;
+		};
+		template<size_t n, typename BindType, typename CallType>
+		typename tuple_index_type<n, CallType>::type select_value(BindType& bind_list, CallType&& call_list, const true_type&)
+		{
+			return call_list.get<n>();
+		}
+		template<size_t n, typename BindType, typename CallType>
+		typename tuple_index_type<n, BindType>::type select_value(BindType& bind_list, CallType&& call_list, const false_type&)
+		{
+			return bind_list.get<n>();
+		}
+		template<size_t index, typename BindType, typename CallType>
+		typename if_else<
+			is_placeholder<typename tuple_index_type<index,
+			BindType>::type>::value,
+			typename tuple_index_type<
+			is_placeholder<typename tuple_index_type<index
+			, BindType>::type>::arg_index - 1,
+			CallType>::type,
+			typename tuple_index_type<index, BindType>::type>::type  select_index_value(BindType& bind_list, CallType&& call_list)
+		{
+				return select_value<if_else_value<is_placeholder<typename tuple_index_type<index
+					, BindType>::type>::value, is_placeholder<typename tuple_index_type<index
+					, BindType>::type>::arg_index - 1, index>::value>(bind_list, std::forward<CallType&&>(call_list), integral_constant<bool, is_placeholder<typename tuple_index_type<index, BindType>::type>::value>());
+		}
+
+		template<typename FuncType, typename... BindFuncArgs>
 		class bind_object
 		{
 		public:
 			typedef FuncType func_type;
 			typedef function<FuncType> functor_type;
 			typedef typename functor_type::return_type return_type;
-			typedef ztl::wrapper::tuples::tuple<BindFuncArgs...> bind_list_type;
+			typedef tuple<BindFuncArgs...> bind_list_type;
 		public:
 			functor_type functor_ptr;
 			bind_list_type bind_list;
 		public:
 			bind_object()
 			{
-
 			}
-			bind_object(const FuncType& func_ptr, const BindFuncArgs&... Args) :functor_ptr(func_ptr), bind_list(Args...)
+			bind_object(FuncType&& func_ptr, BindFuncArgs&&... Args) :functor_ptr(std::forward<FuncType&&>(func_ptr)), bind_list(std::forward<BindFuncArgs&&>(Args)...)
 			{
-
 			}
 			template<typename... PushFuncArgs>
-			return_type operator()(const PushFuncArgs&... Args)
+			return_type operator()(PushFuncArgs&&... Args)
 			{
-				ztl::wrapper::tuples::tuple<PushFuncArgs...> call_list(Args...);
-				bind_traits<bind_list_type, ztl::wrapper::tuples::tuple<PushFuncArgs...>>();
-				//functor_ptr(Args...);
-				return return_type();
+				return this->Invoke(bind_list, tuple<PushFuncArgs...>(std::forward<PushFuncArgs&&>(Args)...), generator<sizeof... (BindFuncArgs)>::type());
+			}
+			template<typename BindType, typename CallType, size_t... Number>
+			return_type Invoke(BindType& bind_list, CallType&& call_list, const sequence_wrapper<Number...>&)
+			{
+				return functor_ptr(select_index_value<Number>(bind_list, std::forward<CallType&&>(call_list))...);
+			}
+			operator functor_type()
+			{
+				return functor_ptr;
 			}
 		};
+
 		////bind的实现
 		template<typename FuncType, typename... BindArgs>
-		bind_object<FuncType, BindArgs...> bind(const FuncType& func_ptr, const BindArgs&... Args)
+		bind_object<FuncType, BindArgs...> bind(FuncType&& func_ptr, BindArgs&&... Args)
 		{
-			return ztl::traits::type_traits::move(bind_object<FuncType, BindArgs...>(func_ptr, Args...));
+			return move(bind_object<FuncType, BindArgs...>(std::forward<FuncType&&>(func_ptr), std::forward<BindArgs&&>(Args)...));
 		}
 	}
 }

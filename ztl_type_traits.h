@@ -125,8 +125,21 @@ namespace ztl
 			{
 				typedef FalsePath type;
 			};
-			
-			
+			/*if_else value版*/
+			template<bool Chose, size_t TrueValue, size_t FlaseValue>
+			struct if_else_value
+			{
+			};
+			template<size_t TrueValue, size_t FlaseValue>
+			struct if_else_value<true, TrueValue, FlaseValue>
+			{
+				static const size_t value = TrueValue;
+			};
+			template<size_t TrueValue, size_t FlaseValue>
+			struct if_else_value<false, TrueValue, FlaseValue>
+			{
+				static const size_t value = FlaseValue ;
+			};
 			/*类型关系*/
 			template<typename T1,typename T2>
 			struct is_same :false_type

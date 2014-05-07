@@ -17,14 +17,14 @@ namespace ztl
 				{
 
 				}
-				/*tuple_value(value_type&& val) :value(ztl::traits::type_traits::move(val))
+				tuple_value(value_type&& val) :value(val)
 				{
 					
-				}*/
-				tuple_value(const value_type& val) :value(val)
+				}
+				/*tuple_value(const value_type& val) :value(val)
 				{
 
-				}
+				}*/
 				tuple_value& operator=(tuple_value val)
 				{
 					this->swap(val.value);
@@ -75,19 +75,19 @@ namespace ztl
 			};
 
 			template<size_t Length, size_t Index, typename... FuncArg>
-			struct GetIndexType_Helper
+			struct get_tuple_index_helper
 			{
 
 			};
 			template<size_t Length, size_t Index, typename CurrentType, typename... FuncArg>
-			struct GetIndexType_Helper<Length, Index, CurrentType, FuncArg...>
+			struct get_tuple_index_helper<Length, Index, CurrentType, FuncArg...>
 			{
 				typedef typename ztl::traits::type_traits::if_else<(Index == Length - 1 - sizeof...(FuncArg)), CurrentType,
-					typename GetIndexType_Helper<Length, Index, FuncArg...>::type
+					typename get_tuple_index_helper<Length, Index, FuncArg...>::type
 				>::type type;
 			};
 			template<size_t Length, size_t Index>
-			struct GetIndexType_Helper<Length, Index>
+			struct get_tuple_index_helper<Length, Index>
 			{
 				typedef nullptr_t type;
 			};
@@ -113,18 +113,24 @@ namespace ztl
 				{
 
 				}
-				/*tuple(CurrentType&& current, FuncArg&&...  Arg) : tuple<FuncArg...>(Arg...), current_element(ztl::traits::type_traits::forward<wrapper_type>(current))
+				tuple(current_type&& current, FuncArg&&...  Arg) : tuple<FuncArg...>(std::forward<FuncArg&&>(Arg)...), current_element(std::forward<current_type&&>(current))
+				{
+
+				}
+				//tuple的构造函数式依赖模板参数的,所以这里的参数类型是通用类型,可捕获左值右值,所以不用写const版本了
+				/*tuple(const CurrentType& current,const FuncArg&...  Arg) : tuple<FuncArg...>(Arg...), current_element(current)
 				{
 
 				}*/
-				tuple(const CurrentType& current,const FuncArg&...  Arg) : tuple<FuncArg...>(Arg...), current_element(current)
+				//???这里不太清楚- -我传入的是右值,如果下面的注释去掉,却会绑定const版本,貌似确实啊,本来参数的原始类型就是const &类型
+				tuple(tuple&& right) : base_type(std::forward<base_type&&>(right.get_rest())), current_element(std::forward<current_type&&>(right.current_element.value))
 				{
 
 				}
-				tuple(const tuple& right) : base_type(right.get_rest()), current_element(right.current_element.value)
+				/*tuple(const tuple& right) : base_type(right.get_rest()), current_element(right.current_element.value)
 				{
 
-				}
+				}*/
 				/*tuple(tuple&& right) :
 					base_type(std::forward<base_type>(right.get_rest())),
 					current_element(std::forward<wrapper_type>(right.current_element))
@@ -136,16 +142,17 @@ namespace ztl
 					swap(right);
 				}
 				template<size_t index>
-				typename GetIndexType_Helper<1 + sizeof...(FuncArg), index, current_type, FuncArg...>::type& get()
+				typename get_tuple_index_helper<1 + sizeof...(FuncArg), index, current_type, FuncArg...>::type& get()
 				{
 
-					return get_impl<index, typename GetIndexType_Helper<(1 + sizeof...(FuncArg)), index, current_type, FuncArg...>::type>(1 + sizeof...(FuncArg));
+					return get_impl<index, typename get_tuple_index_helper<(1 + sizeof...(FuncArg)), index, current_type, FuncArg...>::type>(1 + sizeof...(FuncArg));
 				}
+
 				template<size_t index>
-				const typename GetIndexType_Helper<1 + sizeof...(FuncArg), index, current_type, FuncArg...>::type& get()const
+				const typename get_tuple_index_helper<1 + sizeof...(FuncArg), index, current_type, FuncArg...>::type& get()const
 				{
 
-					return get_impl<index, typename GetIndexType_Helper<(1 + sizeof...(FuncArg)), index, current_type, FuncArg...>::type>(1 + sizeof...(FuncArg));
+					return get_impl<index, typename get_tuple_index_helper<(1 + sizeof...(FuncArg)), index, current_type, FuncArg...>::type>(1 + sizeof...(FuncArg));
 				}
 				template<size_t index, typename IndexElementType>
 				IndexElementType& get_impl(const size_t Length)
@@ -235,6 +242,7 @@ namespace ztl
 			{
 			public:
 				typedef tuple<> mySelf;
+				typedef nullptr_t current_type;
 				const size_t size() const
 				{
 					return 0;
@@ -253,12 +261,18 @@ namespace ztl
 					throw "index error";
 					return  (IndexElementType&)(*this);
 				}
+				template<size_t index, typename IndexElementType>
+				const IndexElementType& get_impl(const size_t Length) const
+				{
+					throw "index error";
+					return  (const IndexElementType&)(*this);
+				}
 				bool operator== (const mySelf& right) const
 				{
 					return true;
 				}
 				template< typename... RightArg>
-				bool operator ==(tuple<RightArg...>& right)
+				bool operator ==(const tuple<RightArg...>& right)const
 				{
 					if (size() == right.size())
 					{
@@ -270,7 +284,7 @@ namespace ztl
 					}
 				}
 				template< typename... RightArg>
-				bool operator !=(tuple<RightArg...>& right)
+				bool operator !=(const tuple<RightArg...>& right)const
 				{
 					if(size() != right.size())
 					{
@@ -285,7 +299,7 @@ namespace ztl
 			template<typename... Arg>
 			tuple<Arg...> make_tuple(Arg&&...  arg)
 			{
-				return move(tuple<Arg...>(arg...));
+				return std::move(tuple<Arg...>(forward<Arg&&>(arg)...));
 			}
 
 			//添加比较支持
