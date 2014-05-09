@@ -6,6 +6,7 @@
 #include "ztl_allocator.h"
 #include "ztl_wrapper.h"
 #include "ztl_functional.h"
+#include "test/test_function.h"
 #include <tuple>
 using std::cout;
 using std::endl;
@@ -193,7 +194,10 @@ using std::cout;
 using std::endl;
 int main()
 {
-	
+	Foo ti(3);
+	function<Foo*> tf = &ti;
+	tf(2,3);
+	//funcaa(1, 2);
 	/*Foo c(1);
 	ztl::functional::function<bool(int, int)>b = &c;
 	b(1, 3);
@@ -214,12 +218,16 @@ int main()
 	////d();
 	ztl::functional::function<int(Foo*, int)>e = &Foo::print_add;
 	Foo ef(1);
+	Foo* pe = &ef;
+	(*pe)(2, 3);
 	e(&ef, 1);
 	ztl::functional::function<decltype(&test)>g = &test;
 	g(4);
+	
 	ztl::functional::function<bool(Foo*, int, int)>h = &Foo::operator();
 	Foo hf(1);
 	h(&hf, 3, 1);
+	
 	ztl::functional::function<decltype(&Foo::print_add)>er;
 	er = &Foo::print_add;
 	Foo eg(1);
@@ -252,8 +260,12 @@ int main()
 		typename tuple_index_type<index, BindType>::type>::type*/
 	static  int index = 2;
 	
-	
 	Foo a(3);
+//	function<Foo*>kjk = &a;
+
+	//std::bind(&Foo::operator(), a, 2, 3)();
+	auto i = ztl::functional::bind(&Foo::print_n, &a, ztl::functional::_1, ztl::functional::_2, ztl::functional::_3, 3);
+	i(3, 4, (float)5);
 	//auto bindList = make_tuple(&a, ztl::functional::_1);
 	//auto callList = ztl::wrapper::tuples::make_tuple(3);
 
@@ -261,8 +273,9 @@ int main()
 //	select_value<2>(bindList, callList, ztl::traits::type_traits::true_type());
 	//std::cout<<std::is_same<typename std::remove_reference<decltype(ituple.get<0>())>::type,const char[2]>::value;
 	
-	auto i = ztl::functional::bind(&Foo::print_n, &a, ztl::functional::_1, ztl::functional::_2, ztl::functional::_3, 3);
-	i(3, 4, (float)5);
+	auto jj = &bind(&Foo::print_n, &a, ztl::functional::_1, ztl::functional::_2, ztl::functional::_3, 3);
+	function<decltype(jj)> kk = jj;
+	
 	//ztl::functional::bind(&testType, index, _1, _2, _3)(std::string("vvv"), 2.0, (void*)0x11111);
 	testType(index, std::string("vvv"), 2.0, (void*)0x11111);
 	//auto i =select_index_value<0>(bindList, callList);
@@ -296,8 +309,16 @@ int main()
 	auto bound_member_fn = bind(&MyPair::multiply, _1); // returns x.multiply()
 	std::cout << bound_member_fn(&ten_two) << '\n';           // 20
 	Foo f_te(10);
-	bind(&f_te, 1, 3)();
+	auto iv =bind(&f_te, 1, 3);
+	function<decltype(&iv)> ivf = &iv;
+	iv();
+	
+	auto bij=bind(&f_te, 3, _1);
+	bind(&bij, 3)();
 	//auto bound_member_data = bind(&MyPair::a, ten_two); // returns ten_two.a
 	//std::cout << bound_member_data() << '\n';                // 10
+	
+
 	return 0;
+
 }

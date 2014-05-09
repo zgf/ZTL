@@ -1,4 +1,4 @@
-﻿生成启动时间为 5/7/2014 7:47:23 PM。
+﻿生成启动时间为 5/9/2014 3:24:46 AM。
      1>项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /Qpar /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
@@ -12,4 +12,4 @@
 
 生成成功。
 
-已用时间 00:00:01.60
+已用时间 00:00:01.91

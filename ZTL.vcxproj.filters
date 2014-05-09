@@ -44,5 +44,8 @@
     <ClInclude Include="ztl_functional.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="test\test_function.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

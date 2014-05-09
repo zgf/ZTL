@@ -8,7 +8,11 @@ namespace ztl
 		class empty
 		{
 		};
-
+		enum class pointer_category:bool
+		{
+			normal_function_ptr,
+			object_function_ptr,
+		};
 		//用handle消除编译时类型限制
 		template<typename dst_type, typename src_type>
 		dst_type union_cast(src_type src)
@@ -38,15 +42,16 @@ namespace ztl
 		{
 		public:
 			typedef function_traits<decltype(&Type::operator())> base_type;
-			typedef typename  base_type::func_ptr_type func_ptr_type;
+			typedef typename  base_type::decay_ptr_type func_ptr_type;
 			template<typename Type>
-			static bool BindType(Type&& target, handle& temp)
+			static pointer_category BindType(Type&& target, handle& temp)
 			{
 				//bind lambda这里坑很多啊- -
 				//		func_ptr_type p = target;只有static可以转换
 				//bool a = std::is_pointer<Type>::value;
+				//static触发lambda隐式转换
 				temp.normal_functor = reinterpret_cast<typename handle::func_type>(static_cast<func_ptr_type>(std::forward<Type&&>(target)));
-				return false;
+				return pointer_category::normal_function_ptr;
 			}
 		};
 		//这里的const 版本是专门为了bind lambda... 和支持const 后缀的函数
@@ -54,12 +59,14 @@ namespace ztl
 		class function_traits<ReturnType(__thiscall ClassType::*)(FuncArgs...)const>
 		{
 		public:
-			using func_ptr_type = ReturnType(*)(FuncArgs...);
+			using func_ptr_type = ReturnType(__thiscall ClassType::*)(FuncArgs...);
+			using decay_ptr_type = ReturnType(__cdecl*)(FuncArgs...);
 			template<typename Type>
-			static bool BindType(Type&& target, handle& temp)
+			static pointer_category BindType(Type&& target, handle& temp)
 			{
+				temp.member_funtor.object_ptr = nullptr;
 				temp.member_funtor.object_func_ptr = reinterpret_cast<typename handle::object_type>(std::forward<Type&&>(target));
-				return true;
+				return pointer_category::object_function_ptr;
 			}
 		};
 		template<typename ReturnType, typename... FuncArgs>
@@ -69,10 +76,10 @@ namespace ztl
 			using func_ptr_type = ReturnType(*)(FuncArgs...);
 			typedef ReturnType return_type;
 			template<typename Type>
-			static bool BindType(Type&& target, handle& temp)
+			static pointer_category BindType(Type&& target, handle& temp)
 			{
 				temp.normal_functor = reinterpret_cast<typename handle::func_type>(std::forward<Type&&>(target));
-				return false;
+				return pointer_category::normal_function_ptr;
 			}
 		};
 		template<typename ReturnType, typename ClassType, typename... FuncArgs>
@@ -80,13 +87,15 @@ namespace ztl
 		{
 		public:
 			typedef ReturnType return_type;
-			using func_ptr_type = ReturnType(*)(FuncArgs...);
+			using func_ptr_type = ReturnType(__thiscall ClassType::*)(FuncArgs...);
+			using decay_ptr_type = ReturnType(__cdecl*)(FuncArgs...);
 			typedef ClassType class_type;
 			template<typename Type>
-			static bool BindType(Type&& target, handle& temp)
+			static pointer_category BindType(Type&& target, handle& temp)
 			{
+				temp.member_funtor.object_ptr = nullptr;
 				temp.member_funtor.object_func_ptr = reinterpret_cast<typename handle::object_type>(std::forward<Type&&>(target));
-				return true;
+				return pointer_category::object_function_ptr;
 			}
 		};
 		//这种是仿函数- - 传入类型是个普通指针的也只有仿函数了,因为仿函数默认成员函数式operator()所以不用传了
@@ -95,76 +104,59 @@ namespace ztl
 		{
 		public:
 			typedef ReturnType functor_type;
-			//using func_ptr_type = ReturnType(*)(FuncArgs...);
-			//typedef ClassType class_type;
+			
 			template<typename Type>
-			static bool BindType(Type&& target, handle& temp)
+			static pointer_category BindType(Type&& target, handle& temp)
 			{
-				temp.member_funtor.object_ptr = new ReturnType(*std::forward<Type&&>(target));
-				temp.member_funtor.object_func_ptr = reinterpret_cast<typename handle::object_type>(&functor_type::operator());
-				return true;
+				temp.member_funtor.object_ptr = new ReturnType(*target);
+				return pointer_category::object_function_ptr;
 			}
 		};
 		//传入的类型不是普通函数指针不是成员函数的指针不是R()形式函数,那就是lambda
 		template<typename Type>
 		class function;
+		//仿函数
 		template<typename Type>
 		class function<Type*>
 		{
 		public:
-			typedef decltype(&Type::operator()) func_ptr_type;
-			typedef typename function<func_ptr_type>::return_type return_type;
-		public:
 			handle handler;
-			bool isObjectPtr;
+			pointer_category isObjectPtr;
 		public:
 			function()
 			{
+				handler.normal_functor = nullptr;
+			}
+			explicit function(nullptr_t)
+			{
+				handler.normal_functor = nullptr;
 			}
 			template<typename Type>
 			function(Type&& target)
 			{
 				handler.member_funtor.object_ptr = nullptr;
 				//这里不能用Type&&
-				isObjectPtr = function_traits<Type>::BindType(std::forward<Type&&>(target), handler);
+				isObjectPtr = function_traits<typename remove_reference<Type>::type>::BindType(std::forward<Type&&>(target), handler);
 			}
 			template<typename Type>
 			function& operator=(Type&& target)
 			{
-				handler.member_funtor.object_ptr = nullptr;
-				isObjectPtr = function_traits<Type>::BindType(std::forward<Type&&>(target), handler);
+				if(handler.member_funtor.object_ptr != nullptr)
+				{
+					delete handler.member_funtor.object_ptr;
+					handler.member_funtor.object_ptr = nullptr;
+				}
+				isObjectPtr = function_traits<typename remove_reference<Type>::type>::BindType(std::forward<Type&&>(target), handler);
 			}
 			function(const function& target)
 			{
-				handler = target.handler;
-				isObjectPtr = target.isObjectPtr;
+				isObjectPtr = function_traits<Type*>::BindType((typename remove_reference<Type>::type*)target.handler.member_funtor.object_ptr, handler);
 			}
-			template<typename FirstType, typename... PushArgs>
-			return_type operator()(FirstType&& firstArg, PushArgs&&... Args)
+			//通过decltype和auto结合解决返回类型依赖调用结果问题
+			template< typename... PushArgs>
+			auto operator()(PushArgs&&... Args)->decltype((*static_cast<Type*>(handler.member_funtor.object_ptr))(Args...))
 			{
-				if(handler.member_funtor.object_ptr == nullptr)
-				{
-					using functor_type = return_type(__thiscall*)(void*, PushArgs...);
-					return union_cast<functor_type>(handler.member_funtor.object_func_ptr)((void*)*(int*)&firstArg, std::forward<PushArgs&&>(Args)...);
-				}
-				else
-				{
-					////说明第一个参数不是调用者
-					using functor_type = return_type(__thiscall*)(void*, FirstType, PushArgs...);
-					return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(handler.member_funtor.object_ptr, firstArg, std::forward<PushArgs&&>(Args)...);
-				}
-			}
-			return_type operator()()
-			{
-				if(handler.member_funtor.object_ptr == nullptr)
-				{
-					return reinterpret_cast<func_ptr_type>(handler.normal_functor)();
-				}
-				else
-				{
-					using functor_type = ReturnType(__thiscall*)(void*);
-					return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(handler.member_funtor.object_ptr);
-				}
+				return (*static_cast<Type*>(handler.member_funtor.object_ptr))(Args...);
 			}
 		};
 		//添加对仿函数支持.对于 function<dectyple(&functor)>(&functor)
@@ -176,23 +168,26 @@ namespace ztl
 			using func_ptr_type = ReturnType(*)(FuncArgs...);
 		public:
 			handle handler;
-			bool isObjectPtr;
+			pointer_category isObjectPtr;
 		public:
 			function()
 			{
+				handler.normal_functor = nullptr;
+			}
+			explicit function(nullptr_t)
+			{
+				handler.normal_functor = nullptr;
 			}
 			template<typename Type>
 			function(Type&& target)
 			{
-				handler.member_funtor.object_ptr = nullptr;
 				//这里不能用Type&&
-				isObjectPtr = function_traits<Type>::BindType(std::forward<Type&&>(target), handler);
+				isObjectPtr = function_traits<typename remove_reference<Type>::type>::BindType(std::forward<Type&&>(target), handler);
 			}
 			template<typename Type>
 			function& operator=(Type&& target)
 			{
-				handler.member_funtor.object_ptr = nullptr;
-				isObjectPtr = function_traits<Type>::BindType(std::forward<Type&&>(target), handler);
+				isObjectPtr = function_traits<typename remove_reference<Type>::type>::BindType(std::forward<Type&&>(target), handler);
 			}
 			function(const function& target)
 			{
@@ -202,7 +197,7 @@ namespace ztl
 			template<typename FirstType, typename... PushArgs>
 			return_type operator()(FirstType&& firstArg, PushArgs&&... Args)
 			{
-				if(isObjectPtr == true)
+				if(isObjectPtr == pointer_category::object_function_ptr)
 				{
 					if(handler.member_funtor.object_ptr == nullptr)
 					{
@@ -211,31 +206,34 @@ namespace ztl
 						//从这里可以看出对象的实际类型根本不影响函数调用,只要传入的是一个课转换为void*类型的类型即可
 						//return ((reinterpret_cast<typename if_else< is_class<FirstType>::value, FirstType, empty>::type*>((void*)*(int*)&firstArg))->*(reinterpret_cast<return_type(typename if_else< is_class<FirstType>::value, FirstType, empty>::type::*)(PushArgs...)>(handler.member_funtor.object_func_ptr)))(Args...);
 						//thiscall该fastcall就支持fastcall了
-						using functor_type = ReturnType(__thiscall*)(void*, PushArgs...);
-						return union_cast<functor_type>(handler.member_funtor.object_func_ptr)((void*)*(int*)&firstArg, std::forward<PushArgs&&>(Args)...);
+						using functor_type = ReturnType(__thiscall*)(FuncArgs...);
+						return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(firstArg, std::forward<PushArgs&&>(Args)...);
 					}
 					else
 					{
-						//说明第一个参数不是调用者
+						//说明第一个参数不是调用者 
 						using functor_type = ReturnType(__thiscall*)(void*, FuncArgs...);
 						return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(handler.member_funtor.object_ptr, firstArg, std::forward<PushArgs&&>(Args)...);
 						//return ((reinterpret_cast<typename if_else< is_class<FirstType>::value, FirstType, empty>::type*>((void*)*(int*)&handler.member_funtor.object_ptr))->*(reinterpret_cast<return_type(typename if_else< is_class<FirstType>::value, FirstType, empty>::type::*)(FirstType, PushArgs...)>(handler.member_funtor.object_func_ptr)))(firstArg,Args...);
 					}
 				}
-				else
+				else 
 				{
-					return reinterpret_cast<func_ptr_type>(handler.normal_functor)(firstArg, std::forward<PushArgs&&>(Args)...);
+					using functor_type = ReturnType(__cdecl*)(FuncArgs...);
+					return reinterpret_cast<functor_type>(handler.normal_functor)(firstArg, std::forward<PushArgs&&>(Args)...);
 				}
+				
 			}
 			return_type operator()()
 			{
 				if(handler.member_funtor.object_ptr == nullptr)
 				{
-					return reinterpret_cast<func_ptr_type>(handler.normal_functor)();
+					using functor_type = ReturnType(__cdecl*)();
+					return reinterpret_cast<functor_type>(handler.normal_functor)();
 				}
 				else
 				{
-					using functor_type = ReturnType(__thiscall*)(void*, FuncArgs...);
+					using functor_type = ReturnType(__thiscall*)(void*);
 					return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(handler.member_funtor.object_ptr);
 				}
 			}
@@ -248,27 +246,38 @@ namespace ztl
 			typedef ReturnType return_type;
 			using func_ptr_type = ReturnType(__cdecl *)(FuncArgs...);
 		public:
-			func_ptr_type handler;
+			handle handler;
+			pointer_category isObjectPtr;
+			//func_ptr_type handler;
 		public:
 			function()
 			{
+				handler.normal_functor = nullptr;
+			}
+			explicit function(nullptr_t)
+			{
+				handler.normal_functor = nullptr;
 			}
 			function(const func_ptr_type& target)
 			{
-				handler = target;
+				isObjectPtr = function_traits<func_ptr_type>::BindType(target, handler);
 			}
 			function& operator=(const func_ptr_type& target)
 			{
-				handler = target;
+				isObjectPtr = function_traits<func_ptr_type>::BindType(target, handler);
+				return*this;
 			}
 			function(const function& target)
 			{
 				handler = target.handler;
+				isObjectPtr = target.isObjectPtr;
 			}
 			template<typename... PushArgs>
 			return_type operator()(PushArgs&&... Args)
 			{
-				return handler(std::forward<PushArgs&&>(Args)...);
+				//push类型是默认类型,不是函数需要的类型.
+				using functor_type = return_type(__cdecl*)(FuncArgs...);
+				return reinterpret_cast<functor_type>(handler.normal_functor)(Args...);
 			}
 		};
 		template<typename ReturnType, typename ClassType, typename... FuncArgs>
@@ -278,19 +287,25 @@ namespace ztl
 			typedef ReturnType return_type;
 			using func_ptr_type = ReturnType(__thiscall ClassType::*)(FuncArgs...);
 		public:
-			func_ptr_type handler;
+			handle handler;
+			pointer_category isObjectPtr;
 		public:
 			function()
 			{
+				handler.normal_functor = nullptr;
+			}
+			explicit function(nullptr_t)
+			{
+				handler.normal_functor = nullptr;
 			}
 			function(const func_ptr_type& target)
 			{
-				handler = target;
+				isObjectPtr = function_traits<func_ptr_type>::BindType(target, handler);
 			}
-			template<typename Type>
 			function& operator=(const func_ptr_type& target)
 			{
-				handler = target;
+				isObjectPtr = function_traits<func_ptr_type>::BindType(target, handler);
+				return*this;
 			}
 			function(const function& target)
 			{
@@ -299,7 +314,8 @@ namespace ztl
 			template<typename FirstType, typename... PushArgs>
 			return_type operator()(FirstType&& firstArg, PushArgs&&... Args)
 			{
-				return (firstArg->*handler)(std::forward<PushArgs&&>(Args)...);
+				using functor_type = ReturnType(__thiscall*)(void*,FuncArgs...);
+				return union_cast<functor_type>(handler.member_funtor.object_func_ptr)(firstArg, std::forward<PushArgs&&>(Args)...);
 			}
 		};
 
@@ -406,7 +422,6 @@ namespace ztl
 		public:
 			typedef FuncType func_type;
 			typedef function<FuncType> functor_type;
-			typedef typename functor_type::return_type return_type;
 			typedef tuple<BindFuncArgs...> bind_list_type;
 		public:
 			functor_type functor_ptr;
@@ -419,12 +434,12 @@ namespace ztl
 			{
 			}
 			template<typename... PushFuncArgs>
-			return_type operator()(PushFuncArgs&&... Args)
+			auto operator()(PushFuncArgs&&... Args)->decltype(Invoke(bind_list, tuple<PushFuncArgs...>(std::forward<PushFuncArgs&&>(Args)...), generator<sizeof... (BindFuncArgs)>::type()))
 			{
-				return this->Invoke(bind_list, tuple<PushFuncArgs...>(std::forward<PushFuncArgs&&>(Args)...), generator<sizeof... (BindFuncArgs)>::type());
+				return Invoke(bind_list, tuple<PushFuncArgs...>(std::forward<PushFuncArgs&&>(Args)...), generator<sizeof... (BindFuncArgs)>::type());
 			}
 			template<typename BindType, typename CallType, size_t... Number>
-			return_type Invoke(BindType& bind_list, CallType&& call_list, const sequence_wrapper<Number...>&)
+			auto Invoke(BindType& bind_list, CallType&& call_list, const sequence_wrapper<Number...>&)->decltype(functor_ptr(select_index_value<Number>(bind_list, std::forward<CallType&&>(call_list))...))
 			{
 				return functor_ptr(select_index_value<Number>(bind_list, std::forward<CallType&&>(call_list))...);
 			}
@@ -433,6 +448,7 @@ namespace ztl
 				return functor_ptr;
 			}
 		};
+		
 
 		////bind的实现
 		template<typename FuncType, typename... BindArgs>

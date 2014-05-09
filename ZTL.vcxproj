@@ -82,6 +82,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="test\test_function.h" />
     <ClInclude Include="ztl_allocator.h" />
     <ClInclude Include="ztl_allocator_base.h" />
     <ClInclude Include="ztl_functional.h" />
