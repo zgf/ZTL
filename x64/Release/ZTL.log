@@ -1,0 +1,25 @@
+﻿生成启动时间为 6/4/2014 10:54:31 PM。
+     1>项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /Qpar /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt container\ztl_deque.h main.cpp
+         ztl_deque.h
+         main.cpp
+     1>f:\myprojects\ztl\ztl\test/test_deque.h(61): warning C4101: “i”: 未引用的局部变量
+     1>f:\myprojects\ztl\ztl\test/test_deque.h(168): warning C4101: “i”: 未引用的局部变量
+     1>f:\myprojects\ztl\ztl\test/test_deque.h(269): warning C4101: “i”: 未引用的局部变量
+     1>f:\myprojects\ztl\ztl\test/test_deque.h(768): warning C4101: “i”: 未引用的局部变量
+     1>f:\myprojects\ztl\ztl\container/ztl_deque.h(586): warning C4018: “>”: 有符号/无符号不匹配
+                 f:\myprojects\ztl\ztl\container/ztl_deque.h(585): 编译类 模板 成员函数“void ztl::deque<int>::reserve(const unsigned __int64,const unsigned __int64)”时
+                 f:\myprojects\ztl\ztl\container/ztl_deque.h(345): 参见对正在编译的函数 模板 实例化“void ztl::deque<int>::reserve(const unsigned __int64,const unsigned __int64)”的引用
+                 f:\myprojects\ztl\ztl\test/test_deque.h(10): 参见对正在编译的类 模板 实例化“ztl::deque<int>”的引用
+       Link:
+         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"F:\MyProjects\ZTL\x64\Release\ZTL.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\MyProjects\ZTL\x64\Release\ZTL.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\MyProjects\ZTL\x64\Release\ZTL.lib" /MACHINE:X64 /PROFILE x64\Release\ztl_deque.obj
+         x64\Release\main.obj
+         正在生成代码
+         已完成代码的生成
+         ZTL.vcxproj -> F:\MyProjects\ZTL\x64\Release\ZTL.exe
+     1>已完成生成项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:04.69

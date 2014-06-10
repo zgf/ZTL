@@ -1,324 +1,464 @@
 #include <iostream>
+#include <vector>
+#include <numeric>
 #include <string>
-#include "ztl_concept.h"
-#include "ztl_type_traits.h"
-#include "ztl_iterator_adapter.h"
-#include "ztl_allocator.h"
-#include "ztl_wrapper.h"
-#include "ztl_functional.h"
-#include "test/test_function.h"
-#include <tuple>
+//#include <assert.h>
+#include "container/ztl_string.h"
+#include <algorithm>
+#include <list>
+#include <algorithm>
+#include "container/ztl_deque.h"
+#include "test/test_deque.h"
+#include "boost/any.hpp"
+#include "tuple/ztl_any.h"
+//#include <windows.h>
+//#include <sstream>
+//#include <stdlib.h>
+//#include "time/ztl_timer.h"
+//#include <string>
+
+//#include <functional>
+//using std::bind;
+//using std::function;
+//#include "test/test_function.h"
+//#include <tuple>
+//#include "type/ztl_type_list.h"
+//using std::cout;
+//using std::endl;
+////约定 类型名 pascal式
+//// 类成员 驼峰式+前缀后缀
+//// 变量名 驼峰式+前缀后缀
+//// 常量 宏 全大写加下划线区分,null例外
+//// 函数名 pascal式
+//// 枚举值pascal式或者pascal+下划线
+////template<typename T>
+////void test(const T a)
+////{
+////	std::cout << "a";
+////}
+////template<typename T>
+////class Test : public ztl::concept::concept_base::IEquality<Test<T>>
+////{
+////	T Data;
+////	friend bool operator== (const Test& left, const Test& right)
+////	{
+////		return left.Data == right.Data;
+////	}
+////
+////};
+////namespace ztl
+////{
+////	namespace wrapper
+////	{
+////		namespace tuples
+////		{
+////			tuple完成
+////			pair triple完成
+////		}
+////	}
+////	namespace concept
+////	{
+////		namespace concept_base
+////		{
+////			INocopyable
+////			IEquality
+////			IOrdering
+////			IAssignable
+////		}
+////		namespace concept_iterator
+////		{
+////
+////		}
+////		namespace concept_container
+////		{
+////
+////		}
+////		namespace concept_checker
+////		{
+////
+////		}
+////	}
+////	namespace traits
+////	{
+////		namespace iterator_traits
+////		{
+////
+////		}
+////		namespace type_traits
+////		{
+////
+////		}
+////		namespace help_traits
+////		{
+////
+////		}
+////	}
+////	namespace memory
+////	{
+////		namespace allocater
+////		{
+////			内存分配器
+////		}
+////		namespace management
+////		{
+////			智能指针
+////			C++ GC
+////		}
+////	}
+////	namespace container
+////	{
+////
+////	}
+////	namespace iterator
+////	{
+////
+////	}
+////	namespace adapter
+////	{
+////		namespace adapter_iterator
+////		{
+////			finish
+////		}
+////		namespace adapter_container
+////		{
+////			slist
+////			优先队列
+////			stack
+////		}
+////	}
+////	namespace  algorithm
+////	{
+////		LINQ
+////		不变
+////		变化
+////	}
+////	namespace functional
+////	{
+////		bind 完成
+////		function 完成
+////	}
+////
+////}
+//
+//
+//using namespace ztl::traits::type_traits;
+//using namespace ztl::functional;
+//using namespace ztl::wrapper::tuples;
 using std::cout;
 using std::endl;
-//约定 类型名 pascal式
-// 类成员 驼峰式+前缀后缀
-// 变量名 驼峰式+前缀后缀
-// 常量 宏 全大写加下划线区分,null例外
-// 函数名 pascal式
-// 枚举值pascal式或者pascal+下划线
-//template<typename T>
-//void test(const T a)
+//int main()
 //{
-//	std::cout << "a";
+//	return 0;
+//
 //}
-//template<typename T>
-//class Test : public ztl::concept::concept_base::IEquality<Test<T>>
+//
+//#include <boost/assert.hpp>
+//
+//#define BOOST_CHECK BOOST_ASSERT
+//
+//static int g_Aconstruct = 0;
+//static int g_Acopy = 0;
+//static int g_Amove = 0;
+//static int g_MoveAmove = 0;
+//static int g_MoveAcopy = 0;
+//
+//void reset_counter()
 //{
-//	T Data;
-//	friend bool operator== (const Test& left, const Test& right)
+//	g_Aconstruct = g_Acopy = g_Amove = g_MoveAmove = g_MoveAcopy = 0;
+//}
+//
+//struct A
+//{
+//	explicit A(int i) : m_i(i)
 //	{
-//		return left.Data == right.Data;
+//		++g_Aconstruct; /*Dump("A::construct " << m_i);*/
+//	};
+//	A(const A& other) : m_i(other.m_i)
+//	{
+//		++g_Acopy; /*Dump("A::copy " << m_i);*/
+//	}
+//	A(A&& other) : m_i(other.m_i)
+//	{
+//		other.m_i = 0; ++g_Amove; /*Dump("A::move " << m_i);*/
+//	}
+//	~A() = default;
+//
+//	mutable int m_i{0};
+//	int f() const
+//	{
+//		//DumpX(m_i);
+//		return (m_i *= 10);
 //	}
 //
+//	int mem_func(int a, int b)
+//	{
+//		return a + b + m_i;
+//	}
+//
+//	int mem_func_const(int a, int b) const
+//	{
+//		return a + b + m_i;
+//	}
+//
+//	int mem_func_volatile(int a, int b) volatile
+//	{
+//		return a + b + m_i;
+//	}
 //};
-//namespace ztl
+//
+//
+//int func(A construct, A copy, A & lref, A const& clref, A && rref)
 //{
-//	namespace wrapper
-//	{
-//		namespace tuples
-//		{
-//			tuple完成
-//			pair triple完成
-//		}
-//	}
-//	namespace concept
-//	{
-//		namespace concept_base
-//		{
-//
-//		}
-//		namespace concept_iterator
-//		{
-//
-//		}
-//		namespace concept_container
-//		{
-//
-//		}
-//		namespace concept_checker
-//		{
-//
-//		}
-//	}
-//	namespace traits
-//	{
-//		namespace iterator_traits
-//		{
-//
-//		}
-//		namespace type_traits
-//		{
-//
-//		}
-//		namespace help_traits
-//		{
-//
-//		}
-//	}
-//	namespace memory
-//	{
-//		namespace allocater
-//		{
-//			内存分配器
-//		}
-//		namespace management
-//		{
-//			智能指针
-//			C++ GC
-//		}
-//	}
-//	namespace container
-//	{
-//
-//	}
-//	namespace iterator
-//	{
-//
-//	}
-//	namespace adapter
-//	{
-//		namespace adapter_iterator
-//		{
-//			finish
-//		}
-//		namespace adapter_container
-//		{
-//			slist
-//			优先队列
-//			stack
-//		}
-//	}
-//	namespace  algorithm
-//	{
-//		LINQ
-//		不变
-//		变化
-//	}
-//	namespace functional
-//	{
-//		bind 完成
-//		function 完成
-//	}
-//	
+//	construct.f();
+//	copy.f();
+//	lref.f();
+//	clref.f();
+//	rref.f();
+//	A temp(std::move(rref));
+//	return 0;
 //}
-#include <functional>
-class A
+//
+//struct object_func
+//{
+//	inline void operator()(int& a, int b) const
+//	{
+//		a += b;
+//	}
+//};
+//
+//struct MoveA
+//{
+//	MoveA() = default;
+//	MoveA(MoveA&&)
+//	{
+//		++g_MoveAmove; /*Dump("MoveA::move");*/
+//	}
+//	~MoveA() = default;
+//
+//	/// TODO: 支持vs2013 ctp
+//	MoveA(MoveA const&)
+//	{
+//		++g_MoveAcopy;
+//	}
+//	//MoveA& operator=(MoveA const&) = default;
+//	//MoveA& operator=(MoveA&&) = default;
+//};
+//
+//int move_func(MoveA const& a)
+//{
+//	return 0;
+//}
+//
+//void void_move_func(MoveA const& a)
+//{
+//}
+//
+//void test()
+//{
+//	{
+//		/// 自由函数转发测试 (形参: 值传递, 左值引用, 常量左值引用, 右值引用)
+//		reset_counter();
+//		A a(1), b(2), c(3), d(4);
+//		auto f = bind(&func, _1, _2, _3, /*_5*/std::ref(c), _4);
+//		f(A(9), a, b, /*c,*/ move(d));
+//		BOOST_CHECK(a.m_i == 1);
+//		BOOST_CHECK(b.m_i == 20);
+//		BOOST_CHECK(c.m_i == 30);
+//		BOOST_CHECK(d.m_i == 0);
+//
+//		BOOST_CHECK(g_Aconstruct == 5);
+//	//	BOOST_CHECK(g_Acopy == 1);
+//	//	BOOST_CHECK(g_Amove == 2);
+//	}
+//
+//	//////////////////////////////////////////////////////////////////////////
+//	// @{ 非静态成员函数 (cv)
+//	{
+//		reset_counter();
+//		A a(1);
+//		auto f = bind(&A::mem_func, _1, 1, _2);
+//		BOOST_CHECK(f(&a, 2) == 4);
+//		BOOST_CHECK(g_Aconstruct == 1);
+//		BOOST_CHECK(g_Acopy == 0);
+//		BOOST_CHECK(g_Amove == 0);
+//	}
+//	{
+//		reset_counter();
+//		const A a(1);
+//		auto f = bind(&A::mem_func_const, _1, 1, _2);
+//		BOOST_CHECK(f(&a, 2) == 4);
+//		BOOST_CHECK(g_Aconstruct == 1);
+//		BOOST_CHECK(g_Acopy == 0);
+//		BOOST_CHECK(g_Amove == 0);
+//	}
+//	{
+//		reset_counter();
+//		volatile A a(1);
+//		auto f = bind(&A::mem_func_volatile, _1, 1, _2);
+//		BOOST_CHECK(f(&a, 2) == 4);
+//		BOOST_CHECK(g_Aconstruct == 1);
+//		BOOST_CHECK(g_Acopy == 0);
+//		BOOST_CHECK(g_Amove == 0);
+//	}
+//	{
+//		reset_counter();
+//		A a(2);
+//		auto f = bind(&A::f, &std::ref(a));
+//		f();
+//	}
+//	///// @}
+//	////////////////////////////////////////////////////////////////////////////
+//
+//	////////////////////////////////////////////////////////////////////////////
+//	///// @{ 仿函数
+//	{
+//		object_func obj;
+//		auto f = bind(&obj, _1, 3);
+//		int r = 1;
+//		f(r);
+//		BOOST_CHECK(r == 4);
+//	}
+//	///// @}
+//	////////////////////////////////////////////////////////////////////////////
+//
+//	////////////////////////////////////////////////////////////////////////////
+//	///// @{ 绑定非静态成员变量
+//	{
+//		/*reset_counter();
+//		A a(2);
+//		auto f = bind(&A::m_i, _1);
+//		int r = f(&a);
+//		BOOST_CHECK(r == 2);
+//		BOOST_CHECK(g_Aconstruct == 1);
+//		BOOST_CHECK(g_Acopy == 0);
+//		BOOST_CHECK(g_Amove == 0);*/
+//	}
+//	///// @}
+//	////////////////////////////////////////////////////////////////////////////
+//
+//	////////////////////////////////////////////////////////////////////////////
+//	///// @{ 移动语义绑定参数
+//	{
+//		reset_counter();
+//		MoveA a;
+//		auto f = bind(&move_func, std::move(a));
+//		f();
+//		BOOST_CHECK(g_MoveAmove == 1);
+//	}
+//	{
+//		reset_counter();
+//		MoveA a;
+//		auto f = bind(&void_move_func, std::move(a));
+//		f();
+//		BOOST_CHECK(g_MoveAmove == 1);
+//	}
+//	/// @}
+//	//////////////////////////////////////////////////////////////////////////
+//}
+//
+#include "time/ztl_timer.h"
+#include "conversion/ztl_type_to_string.h"
+//enum dadada
+//{
+//	huhuhu,
+//};
+//std::ofstream operator<<(std::ofstream os, ztl::string target)
+//{
+//	os << target.data();
+//	return os;
+//}
+#include <memory>
+#include "test/test_string.h"
+#include <unordered_map>
+#include "boost/smart_ptr/enable_shared_from_this.hpp"
+class testA //:public boost::enable_shared_from_this<testA>
 {
 public:
-	int func(int a)
+	testA()
 	{
-		return 1;
+		a = 0;
 	}
-};
-struct Foo
-{
-	Foo(int num) : num_(num)
+	int get()
 	{
-	}
-	int   print_add(int i) 
-	{
-		std::cout << num_ + i << '\n';
+		//auto p = shared_from_this();
+		//boost::shared_ptr<testA> pp(this);
+	
 		return 0;
 	}
-	int   print_n(int i,double b,float c,int d)
+	void operator()(const testA* )
 	{
-		std::cout << num_ + i << '\n';
-		return 0;
+
 	}
-	bool operator()(int a, int b)
-	{
-		return a == b;
-	}
-	int num_;
+	int a;
 };
-
-void print_num(int i)
-{
-	std::cout << i << '\n';
-}
-int test(double a)
-{
-	std::cout << a << std::endl;
-	return 0;
-}
-void testb()
-{
-	std::cout << "succ";
-}
-bool testType(int& a, const std::string& b, double c, void* d)
-{
-	cout << a<<endl;
-	cout << b << endl;
-	cout << c << endl;
-	cout << d << endl;
-	return true;
-}
-double my_divide(double x, double y)
-{
-	return x / y;
-}
-
-struct MyPair
-{
-	double a, b;
-	double multiply()
-	{
-		return a*b;
-	}
-};
-
-using namespace ztl::traits::type_traits;
-using namespace ztl::functional;
-using namespace ztl::wrapper::tuples;
-using std::cout;
-using std::endl;
 int main()
 {
-	Foo ti(3);
-	function<Foo*> tf = &ti;
-	tf(2,3);
-	//funcaa(1, 2);
-	/*Foo c(1);
-	ztl::functional::function<bool(int, int)>b = &c;
-	b(1, 3);
-	auto i = [](int a, int b)->int
+	//vector::emplace()
+	/*int n = -1;
+	ztl::vector<char> temp1(4,5);
+	temp1.push_back(4);
+	for(auto i = 0; i < 5;i++)
 	{
-		return a;
-	};
-	ztl::functional::function<int(int, int)>a = i;
-	auto k = a(1, 3);
-	
+		cout << temp1[i];
+	}*/
+	//TestFunction();
+	//using container = ztl::type_list<int, double, int, float>;
+	//cout << enum_to_string(dadada::huhuhu);
+//	
+//	ztl::Timer timer;
+//	timer.Start();
+////	//ztl::vector<char> StringBuff;
+//	ztl::string StringBuff;
+//	char* temp = new char[32];
+//	ztl::string tempString;
+//	//tempString.reserve(9999999 * 11);
+//	for(auto i = 1; i < 9999999;i++)
+//	{
+//		
+//		ztl::integal_to_string(i, temp);
+		/*temp[0] = '9';
+		temp[1] = '9';
+		temp[2] = '9';
+		temp[3] = '9';
+		temp[4] = '9';
+		temp[5] = '9';
+		temp[6] = '9';
+		temp[6] = '9';
+		temp[6] = '\0';
+*/
+		//timer.Start();
+		
+		//StringBuff += temp;
+		//cout << StringBuff;
+//	//StringBuff.insert(StringBuff.end(), temp, temp + strlen(temp));
+	//}
+//	
+//
+//	
+////	ztl::string String(std::move(StringBuff.data()));
+	//timer.Stop();
+//	
+//	
+//////	char* temp = new char[5];
+////	//float a = 1.324f;
+////	//ztl::type_to_string::to_string(a, 1, 3, temp);
+	//输出运行时间（单位：s）
+//	
+	//cout << "ztl::string版本运行时间（单位：s）：" << timer.GetElapsedTime() << endl;
 
 
-	ztl::functional::function<void(int)>b= &print_num;
-	b(3);*/
-	////ztl::functional::function<int(double)>c=&test;
-	////c(4);
-	////ztl::functional::function<int()>d=&testb;
-	////d();
-	ztl::functional::function<int(Foo*, int)>e = &Foo::print_add;
-	Foo ef(1);
-	Foo* pe = &ef;
-	(*pe)(2, 3);
-	e(&ef, 1);
-	ztl::functional::function<decltype(&test)>g = &test;
-	g(4);
-	
-	ztl::functional::function<bool(Foo*, int, int)>h = &Foo::operator();
-	Foo hf(1);
-	h(&hf, 3, 1);
-	
-	ztl::functional::function<decltype(&Foo::print_add)>er;
-	er = &Foo::print_add;
-	Foo eg(1);
-	er(&eg, 1);
+	// replace signatures used in the same order as described above:
+	// Using positions:                 0123456789*123456789*12345
+	test_string();
 
-	ztl::functional::function<void(int)> f_display = &print_num;
-	f_display(-9);
-
-	//// 保存 lambda 表达式
-	//ztl::functional::function<void()> f_display_42 = []()
-	//{
-	//	print_num(42);
-	//};
-	//f_display_42();
-
-	
-	 //保存成员函数
-	ztl::functional::function<void(const Foo*, int)> f_add_display = &Foo::print_add;
-	const Foo foo(314159);
-	f_add_display(&foo, 1);
-
-
-	/*typename ztl::traits::type_traits::if_else<
-		is_placeholder<typename tuple_index_type<index,
-		BindType>::type>::value,
-		typename tuple_index_type<
-		is_placeholder<typename tuple_index_type<index
-		, BindType>::type>::arg_index - 1,
-		CallType>::type,
-		typename tuple_index_type<index, BindType>::type>::type*/
-	static  int index = 2;
-	
-	Foo a(3);
-//	function<Foo*>kjk = &a;
-
-	//std::bind(&Foo::operator(), a, 2, 3)();
-	auto i = ztl::functional::bind(&Foo::print_n, &a, ztl::functional::_1, ztl::functional::_2, ztl::functional::_3, 3);
-	i(3, 4, (float)5);
-	//auto bindList = make_tuple(&a, ztl::functional::_1);
-	//auto callList = ztl::wrapper::tuples::make_tuple(3);
-
-	//cout << (select_index_value<2>(bindList, callList) == 2.9) << endl;
-//	select_value<2>(bindList, callList, ztl::traits::type_traits::true_type());
-	//std::cout<<std::is_same<typename std::remove_reference<decltype(ituple.get<0>())>::type,const char[2]>::value;
-	
-	auto jj = &bind(&Foo::print_n, &a, ztl::functional::_1, ztl::functional::_2, ztl::functional::_3, 3);
-	function<decltype(jj)> kk = jj;
-	
-	//ztl::functional::bind(&testType, index, _1, _2, _3)(std::string("vvv"), 2.0, (void*)0x11111);
-	testType(index, std::string("vvv"), 2.0, (void*)0x11111);
-	//auto i =select_index_value<0>(bindList, callList);
-	//cout << (select_index_value<0>(bindList, callList) == &a) << endl;
-//	cout << (select_index_value<1>(bindList, callList) == 3) << endl;
-	/*cout << (select_index_value<2>(bindList, callList) == 1) << endl;
-	cout << (select_index_value<3>(bindList, callList) == 1) << endl;
-	cout << (select_index_value<4>(bindList, callList) == 1) << endl;*/
-	//ztl::functional::function<decltype(&Foo::print_n)> test(&Foo::print_n);
-	//test(select_index_value<0>(bindList, callList), select_index_value<1>(bindList, callList)/*, select_index_value<2>(bindList, callList), select_index_value<3>(bindList, callList), select_index_value<4>(bindList, callList)*/);
-	const int& tb = 10;
-	tuple_value<decltype(tb)> ta(tb);
-
-	// binding functions:
-	auto fn_five = bind(&my_divide, 10, 2);               // returns 10/2
-	std::cout << fn_five() << '\n';                          // 5
-
-	auto fn_half = bind(&my_divide, _1, 2);               // returns x/2
-	std::cout << fn_half(10) << '\n';                        // 5
-
-	auto fn_invert = bind(&my_divide, _2, _1);            // returns y/x
-	std::cout << fn_invert(10, 2) << '\n';                    // 0.2
-
-	auto fn_rounding = bind(&my_divide, _1, _2);     // returns int(x/y)
-	std::cout << fn_rounding(10, 3) << '\n';                  // 3
-	function<decltype(&my_divide)> aaa = fn_rounding;
-	aaa(10, 3);
-	MyPair ten_two{10, 2};
-
-	// binding members:
-	auto bound_member_fn = bind(&MyPair::multiply, _1); // returns x.multiply()
-	std::cout << bound_member_fn(&ten_two) << '\n';           // 20
-	Foo f_te(10);
-	auto iv =bind(&f_te, 1, 3);
-	function<decltype(&iv)> ivf = &iv;
-	iv();
-	
-	auto bij=bind(&f_te, 3, _1);
-	bind(&bij, 3)();
-	//auto bound_member_data = bind(&MyPair::a, ten_two); // returns ten_two.a
-	//std::cout << bound_member_data() << '\n';                // 10
-	
-
+	char a1[100] = {1,0,3};
+	const char* b1 = a1;
+	ztl::string a2(b1, 0, 3);
+	cout<<a2;
+	/*testA b;
+	{
+	boost::shared_ptr<void> p(new testA,b);
+	auto c = p;
+	}*/
 	return 0;
-
 }

@@ -18,33 +18,96 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="container\ztl_deque.h">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ztl_concept_base.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ztl_wrapper.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ztl_type_traits.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ztl_iterator_adapter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ztl_concept.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ztl_allocator_base.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ztl_allocator.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ztl_functional.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="test\test_function.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\ztl_smart_pointer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\ztl_safe_gc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\ztl_allocator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\ztl_allocator_base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\ztl_tiny_allocator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="time\ztl_timer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="conversion\ztl_type_to_string.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tuple\ztl_pair.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tuple\ztl_triple.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tuple\ztl_tuple.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="type\ztl_type_list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="type\ztl_type_traits.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="concept\ztl_iterator_concept.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="concept\ztl_container_concept.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="functional\ztl_functional.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="iterator\ztl_iterator_adapter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="concept\ztl_base_concept.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="iterator\iterator_traits.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_algorithm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tuple\ztl_any.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="iterator\ztl_iterator_operator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ztl_iterator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="log\ztl_log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="container\ztl_vector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="container\ztl_string.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="container\ztl_char_traits.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="test\test_deque.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="test\test_string.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
