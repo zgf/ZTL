@@ -191,19 +191,23 @@ namespace ztl
 	public:/*六大函数（构造函数，移动构造函数，移动赋值操作符，复制构造函数，赋值操作符，析构函数）*/
 
 		//construct by empty base_string
-		base_string()
+		base_string() //:sequence(1,0)
 		{
 			check_end_character();
+
+			//sequence.push_back(0);
 		}
 
 		//construct by move target base_string
 		base_string(self_type&& target) :sequence(ztl::forward<vector<char_type>>(target.sequence))
 		{
+
 		}
 		//construct by target base_string
 
 		base_string(const self_type& target) :sequence(target.sequence)
 		{
+
 		}
 
 		template<typename InputIterator, class = typename std::std::enable_if<ztl::is_iterator<InputIterator>::value,
@@ -707,7 +711,9 @@ namespace ztl
 		friend	self_type operator+(const char_type *left, const self_type& right)
 		{	// return NTCS + string
 			self_type result;
-			result.reserve(char_traits_type::length(left) + right.size());
+			auto i = char_traits_type::length(left);
+			auto j = right.size();
+			result.reserve(i +j );
 			result += left;
 			result += right;
 			return ztl::move(result);
@@ -885,7 +891,7 @@ namespace ztl
 			size_type offset_count, size_type count, char_type value)
 		{	// replace [offset, offset + offset_count) with count * value
 			erase(offset, offset_count);
-			cout << this->sequence.data();
+		//	cout << this->sequence.data();
 			insert(offset, count, value);
 			return(*this);
 		}
@@ -1271,7 +1277,7 @@ namespace ztl
 		void check_end_character()
 		{
 			/*空终结符应该是0x0...*/
-			if(sequence.back() != 0)
+			if(sequence.empty()||sequence.back() != 0)
 			{
 				sequence.emplace_back(char_type(0));
 			}
@@ -1280,6 +1286,7 @@ namespace ztl
 		{
 			if(sequence.back() == 0)
 			{
+				//cout << (int)sequence.back();
 				sequence.pop_back();
 			}
 		}

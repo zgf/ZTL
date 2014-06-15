@@ -382,12 +382,12 @@ namespace ztl
 		}
 		void			erase(const iterator_type& first, const iterator_type& last)
 		{
-			cout << this->first_ptr<<endl;
+			//cout << this->first_ptr<<endl;
 
 			rotate(first, last, end());
-			cout << this->first_ptr<<endl;
+			//cout << this->first_ptr<<endl;
 			pop_back_n(distance(first, last));
-			cout << this->first_ptr << endl;
+			//cout << this->first_ptr << endl;
 		}
 		void			resize(const size_type n, const value_type& value)
 		{
@@ -458,7 +458,7 @@ namespace ztl
 		}
 		void			pop_back()
 		{
-			ztl_assert(size() > 0, "error vector size < 0!");
+			ztl_assert(size() > 0, "error vector size <= 0!");
 			destory(last_ptr - 1);
 			--last_ptr;
 		}
@@ -487,6 +487,7 @@ namespace ztl
 			{
 				reserve(2 * capacity() + sizeof...(FuncArgs));
 			}
+		
 			ztl::construct(last_ptr, ztl::forward<FuncArgs>(Args)...);
 			last_ptr += sizeof...(FuncArgs);
 		}

@@ -110,5 +110,17 @@
     <ClInclude Include="test\test_string.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="memory\ztl_buddy_memory_allocator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="container\ztl_dynamic_bitset.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="type\complier_algorithm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\memory_algorithm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

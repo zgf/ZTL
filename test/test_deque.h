@@ -58,7 +58,6 @@ int  Test_deque__clear()
 	std::cout << "期望的结果:mydeque contains: 100 200 300\nmydeque contains: 1101 2202\n" << std::endl;
 	std::cout << "下面是测试结果:" << std::endl;
 
-	unsigned   int  i;
 	ztl::deque< int > mydeque;
 	mydeque.push_back(100);
 	mydeque.push_back(200);
@@ -165,7 +164,6 @@ void Test_deque__swapshortfree()
 	std::cout << "期望的结果:foo contains: 200 200 200 200 200 \nbar contains: 100 100 100 \n" << std::endl;
 	std::cout << "下面是测试结果:" << std::endl;
 
-	unsigned   int  i;
 	ztl::deque< int > foo(3, 100);    // three ints with a value of 100 
 	ztl::deque< int > bar(5, 200);    // five ints with a value of 200 
 
@@ -266,7 +264,6 @@ int  Test_deque__deque()
 	std::cout << "期望的结果:The contents of fifth are: 16 2 77 29 \n" << std::endl;
 	std::cout << "下面是测试结果:" << std::endl;
 
-	unsigned   int  i;
 
 	// constructors used in the same order as described above: 
 	ztl::deque< int > first;                                 // empty deque of ints 
@@ -765,7 +762,6 @@ void Test_deque__swap()
 	std::cout << "期望的结果:foo contains: 200 200 200 200 200 \nbar contains: 100 100 100 \n" << std::endl;
 	std::cout << "下面是测试结果:" << std::endl;
 
-	unsigned   int  i;
 	ztl::deque< int > foo(3, 100);    // three ints with a value of 100 
 	ztl::deque< int > bar(5, 200);    // five ints with a value of 200 
 

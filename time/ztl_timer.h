@@ -27,6 +27,12 @@ namespace ztl
 		{
 			SumCycles = EndCycles = StartCycles = 0;
 		}
+		/*开始重置并新计时*/
+		void ReStart()
+		{
+			Reset();
+			Start();
+		}
 		/*判断计时器是否在运行*/
 		bool IsRunning()
 		{

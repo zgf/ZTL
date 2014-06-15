@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include <numeric>
@@ -9,8 +10,7 @@
 #include <algorithm>
 #include "container/ztl_deque.h"
 #include "test/test_deque.h"
-#include "boost/any.hpp"
-#include "tuple/ztl_any.h"
+//#include "tuple/ztl_any.h"
 //#include <windows.h>
 //#include <sstream>
 //#include <stdlib.h>
@@ -370,7 +370,7 @@ using std::endl;
 #include <memory>
 #include "test/test_string.h"
 #include <unordered_map>
-#include "boost/smart_ptr/enable_shared_from_this.hpp"
+//#include "boost/smart_ptr/enable_shared_from_this.hpp"
 class testA //:public boost::enable_shared_from_this<testA>
 {
 public:
@@ -391,6 +391,7 @@ public:
 	}
 	int a;
 };
+#include "memory/ztl_buddy_memory_allocator.h"
 int main()
 {
 	//vector::emplace()
@@ -449,16 +450,55 @@ int main()
 
 	// replace signatures used in the same order as described above:
 	// Using positions:                 0123456789*123456789*12345
-	test_string();
+//	test_string();
 
-	char a1[100] = {1,0,3};
+	/*char a1[100] = {1,0,3};
 	const char* b1 = a1;
 	ztl::string a2(b1, 0, 3);
-	cout<<a2;
+	cout<<a2;*/
+	/*ztl::Timer timer;
+
+	const int num = 10000;
+	timer.Start();
+	for(auto i = 1; i < num; i++)
+	{
+		if(i == 4821)
+		{
+			auto j = 0;
+		}
+	auto temp = i % 128 + 1;
+	auto n = ztl::allocator<int>::raw_allocate(temp);
+	memset(n, 0, temp);
+	}
+	timer.Stop();
+	cout << "ztl::alloc耗时:" << timer.GetElapsedTime() << endl;
+	auto old = timer.GetElapsedTime();
+	timer.ReStart();
+	for(auto i = 1; i < num; i++)
+	{
+	auto temp = i % 128+1;
+	auto n = operator new(temp);
+	memset(n, 0, temp);
+
+	}
+	timer.Stop();
+	cout << "operator new耗时:" << timer.GetElapsedTime() << endl;
+	cout << "ztl开销为operator new的:" << old/timer.GetElapsedTime()*100<<"%"<<endl;*/
+	//VirtualAlloc(NULL, 4096 * 1024 * 50, MEM_COMMIT, PAGE_READWRITE);
 	/*testA b;
 	{
 	boost::shared_ptr<void> p(new testA,b);
 	auto c = p;
 	}*/
+
+	/*ztl::Timer timer;
+	timer.Start();
+	auto i = VirtualAlloc(NULL, 4096 * 1024, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+	timer.Stop();
+	
+	cout << i<<timer.GetElapsedTime() << endl;*/
+	ztl::buddy_system a;
+	auto ptr =a.allocate(3);
+	a.deallocate(a.get_offset((char*)ptr), 3, 1 << 3);
 	return 0;
 }

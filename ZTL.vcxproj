@@ -125,13 +125,16 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <OpenMPSupport>true</OpenMPSupport>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,6 +156,8 @@
       <SDLCheck>true</SDLCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <OpenMPSupport>true</OpenMPSupport>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,15 +165,21 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>true</Profile>
+      <HeapReserveSize>
+      </HeapReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="algorithm\ztl_algorithm.h" />
     <ClInclude Include="container\ztl_char_traits.h" />
+    <ClInclude Include="container\ztl_dynamic_bitset.h" />
     <ClInclude Include="container\ztl_string.h" />
     <ClInclude Include="log\ztl_log.h" />
+    <ClInclude Include="memory\memory_algorithm.h" />
+    <ClInclude Include="memory\ztl_buddy_memory_allocator.h" />
     <ClInclude Include="test\test_deque.h" />
     <ClInclude Include="test\test_string.h" />
+    <ClInclude Include="type\complier_algorithm.h" />
     <ClInclude Include="ztl_iterator.h" />
     <ClInclude Include="iterator\ztl_iterator_operator.h" />
     <ClInclude Include="iterator\iterator_traits.h" />

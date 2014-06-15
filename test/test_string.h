@@ -33,6 +33,8 @@ int  Test_basic_string__back()
 	std::cout << "下面是测试结果:" << std::endl;
 
 	ztl::string str("hello world.");
+	std::cout << str << '\n';
+
 	str.back() = '!';
 	std::cout << str << '\n';
 	return  0;
@@ -471,7 +473,6 @@ int  Test_basic_string__data()
 	std::cout << "期望的结果:str and cstr have the same length.\nstr and cstr have the same content.\n" << std::endl;
 	std::cout << "下面是测试结果:" << std::endl;
 
-	int  length;
 
 	ztl::string str = "Test string";
 	char * cstr = "Test string";
@@ -1021,7 +1022,7 @@ int  Test_char_traits__copy()
 	char  foo[] = "test string";
 	char  bar[20];
 
-	unsigned  len = std::char_traits< char >::length(foo);
+	auto  len = std::char_traits< char >::length(foo);
 	std::char_traits< char >::copy(bar, foo, len);
 
 	bar[len] = '\0';  // append null-character 

@@ -1,16 +1,12 @@
-﻿生成启动时间为 6/10/2014 7:54:50 PM。
+﻿生成启动时间为 6/14/2014 4:23:42 AM。
      1>项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /FR"Debug\\" /Gd /TP /analyze- /errorReport:prompt container\ztl_deque.h main.cpp
          main.cpp
-     1>f:\myprojects\ztl\ztl\test\test_deque.h(61): warning C4101: “i”: 未引用的局部变量
-     1>f:\myprojects\ztl\ztl\test\test_deque.h(168): warning C4101: “i”: 未引用的局部变量
-     1>f:\myprojects\ztl\ztl\test\test_deque.h(269): warning C4101: “i”: 未引用的局部变量
-     1>f:\myprojects\ztl\ztl\test\test_deque.h(768): warning C4101: “i”: 未引用的局部变量
-     1>f:\myprojects\ztl\ztl\test\test_string.h(474): warning C4101: “length”: 未引用的局部变量
-     1>f:\myprojects\ztl\ztl\test\test_string.h(683): warning C4244: “参数”: 从“std::streamoff”转换到“unsigned int”，可能丢失数据
-     1>f:\myprojects\ztl\ztl\test\test_string.h(797): warning C4018: “<”: 有符号/无符号不匹配
-         Unknown compiler version - please run the configure tests and report the results
+     1>f:\myprojects\ztl\ztl\memory\ztl_buddy_memory_allocator.h(63): warning C4018: “<=”: 有符号/无符号不匹配
+     1>f:\myprojects\ztl\ztl\memory\ztl_tiny_allocator.h(102): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\myprojects\ztl\ztl\test\test_string.h(684): warning C4244: “参数”: 从“std::streamoff”转换到“unsigned int”，可能丢失数据
+     1>f:\myprojects\ztl\ztl\test\test_string.h(798): warning C4018: “<”: 有符号/无符号不匹配
      1>f:\myprojects\ztl\ztl\container\ztl_deque.h(588): warning C4018: “>”: 有符号/无符号不匹配
                  f:\myprojects\ztl\ztl\container\ztl_deque.h(587): 编译类 模板 成员函数“void ztl::deque<int>::reserve(const unsigned int,const unsigned int)”时
                  f:\myprojects\ztl\ztl\container\ztl_deque.h(347): 参见对正在编译的函数 模板 实例化“void ztl::deque<int>::reserve(const unsigned int,const unsigned int)”的引用
@@ -30,4 +26,4 @@
 
 生成成功。
 
-已用时间 00:00:05.73
+已用时间 00:00:08.55

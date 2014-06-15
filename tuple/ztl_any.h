@@ -1,6 +1,7 @@
 #pragma once
 #include <typeinfo>
 #include "../type/ztl_type_traits.h"
+#include <type_traits>
 namespace ztl
 {
 	class any
@@ -32,7 +33,7 @@ namespace ztl
 
 		// Perfect forwarding of ValueType
 		template<typename ValueType>
-		any(ValueType&& value, typename boost::disable_if<boost::is_same<any&, ValueType> >::type* = 0)
+		any(ValueType&& value, typename std::disable_if<ztl::is_same<any&, ValueType> >::type* = 0)
 			: content(new holder< typename remove_reference<ValueType>::type >(static_cast<ValueType&&>(value)))
 		{
 		}
@@ -148,7 +149,7 @@ namespace ztl
 	class bad_any_cast : public std::bad_cast
 	{
 	public:
-		virtual const char * what() const()
+		virtual const char * what() const
 		{
 			return "boost::bad_any_cast: failed conversion using boost::any_cast";
 		}
