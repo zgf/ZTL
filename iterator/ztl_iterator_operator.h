@@ -100,7 +100,7 @@ namespace ztl
 	}
 	template <class ForwardIterator>inline
 	ForwardIterator next(ForwardIterator x,
-		typename std::iterator_traits<ForwardIterator>::different_type n = 1)
+		typename ztl::iterator_traits<ForwardIterator>::different_type n = 1)
 	{
 		advance(x, n); 
 		return x;

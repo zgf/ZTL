@@ -1,24 +1,18 @@
-﻿生成启动时间为 6/14/2014 4:23:05 AM。
+﻿生成启动时间为 7/26/2014 12:48:43 AM。
      1>项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Ox /Ob2 /Oi /Ot /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /Qpar /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>f:\myprojects\ztl\ztl\memory\ztl_buddy_memory_allocator.h(63): warning C4018: “<=”: 有符号/无符号不匹配
-     1>f:\myprojects\ztl\ztl\memory\ztl_tiny_allocator.h(102): warning C4018: “<”: 有符号/无符号不匹配
-     1>f:\myprojects\ztl\ztl\test/test_string.h(684): warning C4244: “参数”: 从“std::streamoff”转换到“unsigned int”，可能丢失数据
-     1>f:\myprojects\ztl\ztl\test/test_string.h(798): warning C4018: “<”: 有符号/无符号不匹配
-     1>f:\myprojects\ztl\ztl\container/ztl_deque.h(588): warning C4018: “>”: 有符号/无符号不匹配
-                 f:\myprojects\ztl\ztl\container/ztl_deque.h(587): 编译类 模板 成员函数“void ztl::deque<int>::reserve(const unsigned int,const unsigned int)”时
-                 f:\myprojects\ztl\ztl\container/ztl_deque.h(347): 参见对正在编译的函数 模板 实例化“void ztl::deque<int>::reserve(const unsigned int,const unsigned int)”的引用
-                 f:\myprojects\ztl\ztl\test/test_deque.h(10): 参见对正在编译的类 模板 实例化“ztl::deque<int>”的引用
-       Link:
-         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\MyProjects\ZTL\Release\ZTL.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\MyProjects\ZTL\Release\ZTL.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\MyProjects\ZTL\Release\ZTL.lib" /MACHINE:X86 /PROFILE /SAFESEH Release\ztl_deque.obj
-         Release\main.obj
-         正在生成代码
-         已完成代码的生成
-         ZTL.vcxproj -> F:\MyProjects\ZTL\Release\ZTL.exe
-     1>已完成生成项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”(Build 个目标)的操作。
+     1>f:\myprojects\ztl\ztl\algorithm/ztl_sort.h(22): error C2676: 二进制“&&”:“std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int>>>”不定义该运算符或到预定义运算符可接收的类型的转换
+                 main.cpp(31): 参见对正在编译的函数 模板 实例化“BidirectionalIterator ztl::partition<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int>>>,main::<lambda_9db55f51e528febfc29c2067d5d082d6>>(BidirectionalIterator,BidirectionalIterator,UnaryPredicate)”的引用
+                 with
+                 [
+                     BidirectionalIterator=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int>>>
+         ,            UnaryPredicate=main::<lambda_9db55f51e528febfc29c2067d5d082d6>
+                 ]
+     1>f:\myprojects\ztl\ztl\algorithm/ztl_sort.h(22): fatal error C1903: 无法从以前的错误中恢复；正在停止编译
+     1>已完成生成项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”(Build 个目标)的操作 - 失败。
 
-生成成功。
+生成失败。
 
-已用时间 00:00:03.65
+已用时间 00:00:01.43

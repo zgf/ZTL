@@ -91,6 +91,11 @@ namespace ztl
 			return ztl::move(mySelf(target));
 		}
 	};
+	template<class Container> inline
+		ztl::back_insert_iterator<Container> back_inserter(Container& Cont)
+	{	// return a back_insert_iterator
+			return (ztl::back_insert_iterator<Container>(Cont));
+	}
 	template<typename InsertContainer>
 	class insert_iterator :
 		public virtual ztl::IOutputIterator<insert_iterator<InsertContainer>, void, output_iterator, void, void, void>

@@ -49,4 +49,9 @@ namespace ztl
 			return *this;
 		}
 	};
+	template<typename LeftType,typename RightType>
+	ztl::pair<LeftType, RightType> make_pair(LeftType&& left, RightType&& right)
+	{
+		return 	ztl::pair<LeftType, RightType>(ztl::forward(left), ztl::forward(right));
+	}
 }

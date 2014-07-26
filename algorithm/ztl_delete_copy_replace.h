@@ -1,0 +1,48 @@
+#pragma once
+namespace ztl
+{
+	//copy
+	template<typename InputIterator, typename ForwardIterator>inline
+		ForwardIterator copy_dispath(InputIterator start, InputIterator end, ForwardIterator des, ztl::false_type)
+	{
+			while(start != end)
+			{
+				construct(&*des, *start);
+				des++;
+			}
+			return des;
+	}
+	/*ÄÚ´æ³õÊ¼»¯*/
+	template<typename InputIterator, typename ForwardIterator>inline
+		ForwardIterator copy_dispath(InputIterator start, InputIterator end, ForwardIterator des, ztl::true_type)
+	{
+			using value_type = typename iterator_traits<InputIterator>::value_type;
+			using different_type = typename iterator_traits<InputIterator>::different_type;
+
+			const different_type count = ztl::distance(start, end);
+			memcpy_s(&*des, count*sizeof(value_type), &*start, count*sizeof(value_type));
+			des += count;
+			return des;
+	}
+
+	template<typename InputIterator, typename ForwardIterator>inline
+		ForwardIterator copy(InputIterator start, InputIterator end, ForwardIterator des)
+	{
+			return ztl::move(copy_dispath(start, end, des, ztl::integral_constant<bool, ztl::is_pod<typename ztl::iterator_traits<InputIterator>::value_type>::value>()));
+	}
+	inline wchar_t* copy(wchar_t* start, wchar_t* end, wchar_t* des)
+	{
+		memmove(des, start, (end - start)*sizeof(wchar_t));
+		return ztl::move(des + (end - start));
+	}
+	inline unsigned char* copy(unsigned char* start, unsigned char* end, unsigned char* des)
+	{
+		memmove(des, start, (end - start)*sizeof(unsigned char));
+		return ztl::move(des + (end - start));
+	}
+	inline char* copy(char* start, char* end, char* des)
+	{
+		memmove(des, start, (end - start)*sizeof(char));
+		return ztl::move(des + (end - start));
+	}
+}

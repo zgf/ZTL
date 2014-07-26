@@ -1,29 +1,20 @@
-﻿生成启动时间为 6/14/2014 4:23:42 AM。
+﻿生成启动时间为 7/26/2014 11:32:26 AM。
      1>项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /FR"Debug\\" /Gd /TP /analyze- /errorReport:prompt container\ztl_deque.h main.cpp
+         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /FR"Debug\\" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>f:\myprojects\ztl\ztl\memory\ztl_buddy_memory_allocator.h(63): warning C4018: “<=”: 有符号/无符号不匹配
-     1>f:\myprojects\ztl\ztl\memory\ztl_tiny_allocator.h(102): warning C4018: “<”: 有符号/无符号不匹配
-     1>f:\myprojects\ztl\ztl\test\test_string.h(684): warning C4244: “参数”: 从“std::streamoff”转换到“unsigned int”，可能丢失数据
-     1>f:\myprojects\ztl\ztl\test\test_string.h(798): warning C4018: “<”: 有符号/无符号不匹配
-     1>f:\myprojects\ztl\ztl\container\ztl_deque.h(588): warning C4018: “>”: 有符号/无符号不匹配
-                 f:\myprojects\ztl\ztl\container\ztl_deque.h(587): 编译类 模板 成员函数“void ztl::deque<int>::reserve(const unsigned int,const unsigned int)”时
-                 f:\myprojects\ztl\ztl\container\ztl_deque.h(347): 参见对正在编译的函数 模板 实例化“void ztl::deque<int>::reserve(const unsigned int,const unsigned int)”的引用
-                 f:\myprojects\ztl\ztl\test\test_deque.h(10): 参见对正在编译的类 模板 实例化“ztl::deque<int>”的引用
-         正在生成代码...
-         正在跳过...(未检测到相关更改)
-         ztl_deque.h
        Link:
-         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\MyProjects\ZTL\Debug\ZTL.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\MyProjects\ZTL\Debug\ZTL.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\MyProjects\ZTL\Debug\ZTL.lib" /MACHINE:X86 /PROFILE Debug\ztl_deque.obj
+         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\MyProjects\ZTL\Debug\ZTL.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\MyProjects\ZTL\Debug\ZTL.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE:NO /NXCOMPAT /IMPLIB:"F:\MyProjects\ZTL\Debug\ZTL.lib" /MACHINE:X86 /PROFILE Debug\ztl_deque.obj
          Debug\main.obj
+         Debug\ztl_tiny_allocator.obj
+         Debug\ztl_buddy_memory_allocator.obj
      1>LINK : warning LNK4075: 忽略“/INCREMENTAL”(由于“/PROFILE”规范)
      1>ztl_deque.obj : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/OPT:LBR”规范)
          ZTL.vcxproj -> F:\MyProjects\ZTL\Debug\ZTL.exe
        BscMake:
-         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\bscmake.exe /nologo /o"F:\MyProjects\ZTL\Debug\ZTL.bsc" /n Debug\ztl_deque.sbr Debug\main.sbr
+         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\bscmake.exe /nologo /o"F:\MyProjects\ZTL\Debug\ZTL.bsc" /n Debug\ztl_deque.sbr Debug\main.sbr Debug\ztl_tiny_allocator.sbr Debug\ztl_buddy_memory_allocator.sbr
      1>已完成生成项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:08.55
+已用时间 00:00:06.22

@@ -21,6 +21,12 @@
     <ClCompile Include="container\ztl_deque.h">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="memory\ztl_tiny_allocator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\ztl_buddy_memory_allocator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\test_function.h">
@@ -120,6 +126,45 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="memory\memory_algorithm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\ztl_slub_allocator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\node_allocator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="random\ztl_random.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_search.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_sort.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_permutation_combination.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_relative.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="functional\ztl_operator_functor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_numeric.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_product_mutation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_delete_copy_replace.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_math.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\set_algorithm.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

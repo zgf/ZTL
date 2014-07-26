@@ -29,6 +29,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -78,24 +79,32 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>F:\boost;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\boost\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>F:\boost;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\boost\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <BrowseInformation>true</BrowseInformation>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -156,7 +165,7 @@
       <SDLCheck>true</SDLCheck>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <OpenMPSupport>true</OpenMPSupport>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
@@ -170,13 +179,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="algorithm\set_algorithm.h" />
     <ClInclude Include="algorithm\ztl_algorithm.h" />
+    <ClInclude Include="algorithm\ztl_delete_copy_replace.h" />
+    <ClInclude Include="algorithm\ztl_math.h" />
+    <ClInclude Include="algorithm\ztl_product_mutation.h" />
+    <ClInclude Include="algorithm\ztl_numeric.h" />
+    <ClInclude Include="algorithm\ztl_permutation_combination.h" />
+    <ClInclude Include="algorithm\ztl_relative.h" />
+    <ClInclude Include="algorithm\ztl_search.h" />
+    <ClInclude Include="algorithm\ztl_sort.h" />
     <ClInclude Include="container\ztl_char_traits.h" />
     <ClInclude Include="container\ztl_dynamic_bitset.h" />
     <ClInclude Include="container\ztl_string.h" />
+    <ClInclude Include="functional\ztl_operator_functor.h" />
     <ClInclude Include="log\ztl_log.h" />
     <ClInclude Include="memory\memory_algorithm.h" />
+    <ClInclude Include="memory\node_allocator.h" />
     <ClInclude Include="memory\ztl_buddy_memory_allocator.h" />
+    <ClInclude Include="memory\ztl_slub_allocator.h" />
+    <ClInclude Include="random\ztl_random.h" />
     <ClInclude Include="test\test_deque.h" />
     <ClInclude Include="test\test_string.h" />
     <ClInclude Include="type\complier_algorithm.h" />
@@ -207,6 +229,8 @@
   <ItemGroup>
     <ClCompile Include="container\ztl_deque.h" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="memory\ztl_tiny_allocator.cpp" />
+    <ClCompile Include="memory\ztl_buddy_memory_allocator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

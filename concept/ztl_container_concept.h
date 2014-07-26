@@ -36,7 +36,7 @@ namespace ztl
 		typedef DerivedType				self_type;
 
  	public:
-		/*iterator_type			begin();
+		iterator_type			begin();
 		iterator_type			end();		
 		void					clear();
 		const_iterator_type		cbegin()	const
@@ -72,7 +72,7 @@ namespace ztl
 		{
 		return !(left == right);
 		}
-		*/
+		
 		
 		
 	};
