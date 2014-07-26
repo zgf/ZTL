@@ -1,4 +1,5 @@
 //非质变算法，序列间的关系算法
+#pragma once
 #include "../functional/ztl_operator_functor.h"
 #include "../tuple/ztl_pair.h"
 #include "../type/ztl_type_traits.h"
@@ -188,5 +189,67 @@ namespace ztl
 		Type max_if(Type&& left, Type&& right,  LeftFunctor&& left_functor,  RightFunctor&& right_functor)
 	{
 			return min_if(ztl::forward<Type>(right), ztl::forward<Type>(left), ztl::forward<Type>(left_functor), ztl::forward<Type>(right_functor));
+	}
+	//返回三个迭代器指向的元素的中值元素的迭代器
+	template<typename ForwardIterator, typename BinaryPredicate = ztl::less<void>>inline
+		ForwardIterator middle_element(ForwardIterator first, ForwardIterator middle, ForwardIterator last, BinaryPredicate&& Pred = ztl::less<void>())
+	{
+			if(Pred(*first, *middle))
+			{
+				if(Pred(*middle, *last))
+				{
+					return middle;
+				}
+				else if(Pred(*first, *last))
+				{
+					return last;
+				}
+				else
+				{
+					return first;
+				}
+			}
+			else
+			{
+				if(Pred(*last, *middle))
+				{
+					return middle;
+				}
+				else if(Pred(*first, *last))
+				{
+					return first;
+				}
+				else
+				{
+					return last;
+				}
+			}
+	}
+	//三个迭代器之中的最小值
+	template<typename InputIterator, typename BinaryPredicate = ztl::less<void>>
+	InputIterator min_element(InputIterator first, InputIterator middle, InputIterator last, BinaryPredicate Pred = ztl::less<void>())
+	{
+		if(Pred(*first, *middle))
+		{
+			if(Pred(*last, *first))
+			{
+				return last;
+			}
+			else
+			{
+				return first
+			}
+		}
+		else
+		{
+			if(Pred(*last, *middle))
+			{
+				return last;
+			}
+			else
+			{
+				return middle;
+			}
+		}
 	}
 }

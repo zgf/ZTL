@@ -14,14 +14,32 @@ using std::endl;
 //#include "test/test_string.h"
 #include "algorithm/set_algorithm.h"
 #include "algorithm/ztl_sort.h"
+#include "algorithm/ztl_heap.h"
 
+void test_heapify()
+{
+	ztl::vector<int> w{3, 1, 4, 2, 5, 9};
+	ztl::sort(w.begin(), w.end());
+	//make_heap(w.begin(), w.end());
+	ztl::for_each(w.begin(), w.end(), [](int i)
+	{
+		cout << i;
+	});
 
-	
+}
 
 
 int main()
 {
-	ztl::vector<int> v = {1, 0, 8, 0, 3, 5, 6,9, 9, 2};
+	test_heapify();
+	/*ztl::vector<int> v = {1, 0, 8, 0, 3, 5, 6,9, 9, 2};
+	ztl::vector<int> w{3, 1, 4, 1, 5, 9};
+	ztl::make_heap(w.begin(), w.end());
+
+	ztl::for_each(w.begin(), w.end(), [](int i)
+	{
+		cout << i;
+	});*/
 	/* for(int i = 0; i < 9; ++i)
 	 {
 		 v.push_back(i);
@@ -30,12 +48,12 @@ int main()
 	 {
 		 return (element < 5 || element == 5);
 	 });*/
-	 ztl::quick_sort(v.begin(), v.end());
+	// ztl::quick_sort(v.begin(), v.end());
 	
-	ztl::for_each(v.begin(), v.end(), [](int i)
+	/*ztl::for_each(v.begin(), v.end(), [](int i)
 	{
 		cout << i;
-	});
+	});*/
 
 	return 0;
 }

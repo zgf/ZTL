@@ -103,7 +103,32 @@ namespace ztl
 		typename ztl::iterator_traits<ForwardIterator>::different_type n = 1)
 	{
 		advance(x, n); 
-		return x;
+		return ztl::move(x);
 	}
-	
+
+	template <class BidirectionalIterator>inline
+		BidirectionalIterator prev_dispatch(BidirectionalIterator x,
+		typename ztl::iterator_traits<BidirectionalIterator>::different_type n,bidirectional_iterator)
+	{
+			while(n != 0)
+			{
+				--x;
+				--n;
+			}
+			return ztl::move(x);
+	}
+	template <class BidirectionalIterator>inline
+		BidirectionalIterator prev_dispatch(BidirectionalIterator x,
+		typename ztl::iterator_traits<BidirectionalIterator>::different_type n, random_acess_iterator)
+	{
+			return ztl::move(x -= n);
+	}
+	template <class BidirectionalIterator>inline
+		BidirectionalIterator prev(BidirectionalIterator x,
+		typename ztl::iterator_traits<BidirectionalIterator>::different_type n = 1)
+	{
+		return prev_dispatch(x,
+			n,
+			ztl::iterator_traits<BidirectionalIterator>::iterator_category());
+	}
 }

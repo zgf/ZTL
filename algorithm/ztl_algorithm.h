@@ -4,18 +4,18 @@
 #include "ztl_math.h"
 namespace ztl
 {
-#undef max
-#undef min
-	template<typename Type>inline
-	Type max(Type&& left, Type&& right)
-	{
-		return left > right ? left : right;
-	}
-	template<typename Type>inline
-	Type min(Type&& left, Type&& right)
-	{
-		return left < right ? left : right;
-	}
+//#undef max
+//#undef min
+//	template<typename Type>inline
+//	Type max(Type&& left, Type&& right)
+//	{
+//		return left > right ? left : right;
+//	}
+//	template<typename Type>inline
+//	Type min(Type&& left, Type&& right)
+//	{
+//		return left < right ? left : right;
+//	}
 	template<typename Type>inline
 		Type abs(Type&& left, Type&& right)
 	{

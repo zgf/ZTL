@@ -182,6 +182,7 @@
     <ClInclude Include="algorithm\set_algorithm.h" />
     <ClInclude Include="algorithm\ztl_algorithm.h" />
     <ClInclude Include="algorithm\ztl_delete_copy_replace.h" />
+    <ClInclude Include="algorithm\ztl_heap.h" />
     <ClInclude Include="algorithm\ztl_math.h" />
     <ClInclude Include="algorithm\ztl_product_mutation.h" />
     <ClInclude Include="algorithm\ztl_numeric.h" />
