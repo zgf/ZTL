@@ -144,21 +144,7 @@ namespace ztl
 	template<typename BidirectionalIterator,
 		typename IteratorCategory =
 		typename iterator_traits<BidirectionalIterator>::iterator_category>
-	class reverse_iterator :
-		public virtual IEquality <
-		reverse_iterator < BidirectionalIterator, IteratorCategory >> ,
-		public virtual IAssignable <
-		reverse_iterator < BidirectionalIterator, IteratorCategory >> ,
-		public virtual IOrdering <
-		reverse_iterator < BidirectionalIterator, IteratorCategory >> ,
-		public virtual IRandomAcessIterator<
-		reverse_iterator<BidirectionalIterator, IteratorCategory>,
-		typename iterator_traits<BidirectionalIterator>::value_type,
-		typename iterator_traits<BidirectionalIterator>::iterator_category,
-		typename iterator_traits<BidirectionalIterator>::different_type,
-		typename iterator_traits<BidirectionalIterator>::pointer_type,
-		typename iterator_traits<BidirectionalIterator>::reference_type
-		>
+	class reverse_iterator
 	{
 	public:
 		typedef reverse_iterator<BidirectionalIterator, IteratorCategory>					mySelf;
@@ -168,7 +154,9 @@ namespace ztl
 		typedef typename iterator_traits<iterator_type>::reference_type		reference_type;
 		typedef typename iterator_traits<iterator_type>::different_type		different_type;
 		typedef typename iterator_traits<iterator_type>::iterator_category	iterator_category;
-
+		typedef mySelf self_type;
+		typedef const reference_type const_reference_type;
+		typedef const pointer_type const_pointer_type;
 	public:
 		iterator_type iterator;
 	public:/*IAssignable*/
@@ -200,10 +188,26 @@ namespace ztl
 		{
 			return iterator == right.iterator;
 		}
+		friend bool operator!= (const mySelf& left, const mySelf& right)
+		{
+			return !(left == right);
+		}
 	public:/*IOrdering*/
 		bool					operator<(const mySelf& right)const
 		{
-			return iterator < right.iterator;
+			return right.iterator < iterator;
+		}
+		friend bool operator<= (const mySelf& left, const mySelf& right)
+		{
+			return !(left < right);
+		}
+		friend bool operator>(const mySelf& left, const mySelf& right)
+		{
+			return right < left;
+		}
+		friend bool operator>= (const mySelf& left, const mySelf& right)
+		{
+			return !(right < left);
 		}
 	public: /*IIterator*/
 		reference_type			operator*()
@@ -211,7 +215,26 @@ namespace ztl
 			auto temp = iterator;
 			return *(--temp);
 		}
-	public:/*IForwardIterator*/
+		const_reference_type			operator*() const
+		{
+			auto temp = iterator;
+			return *(--temp);
+		}
+
+		/*const_poiner_type operator->() const
+		{
+			return &*this;
+		}*/
+		pointer_type operator->()
+		{
+			return &*this;
+		}
+		self_type operator++(int)
+		{
+			self_type temp(*this);
+			++(*this);
+			return ztl::move(temp);
+		}
 		mySelf&					operator++()
 		{
 			--iterator;
@@ -223,6 +246,12 @@ namespace ztl
 			++iterator;
 			return *this;
 		}
+		self_type operator--(int)
+		{
+			self_type temp(*this);
+			--(*this);
+			return ztl::move(temp);
+		}
 	public:	/*IRandomAcessIterator*/
 		mySelf&					operator+=(const different_type n)
 		{
@@ -233,6 +262,32 @@ namespace ztl
 		{
 			iterator += n;
 			return *this;
+		}
+		friend self_type operator+(const self_type& Iter, different_type n)
+		{
+			self_type tempIter = Iter;
+			return ztl::move(tempIter += n);
+		}
+		friend self_type operator+(const different_type n, const self_type& Iter)
+		{
+			return ztl::move(Iter + n);
+		}
+		friend self_type operator-(const self_type& Iter, different_type n)
+		{
+			self_type tempIter = Iter;
+			return ztl::move(tempIter -= n);
+		}
+		friend different_type operator-(const self_type& left, const self_type& right)
+		{
+			return  right.iterator - left.iterator;
+		}
+		friend self_type operator-(const different_type n, const self_type& Iter)
+		{
+			return ztl::move(Iter - n);
+		}
+		reference_type operator[](const different_type n)
+		{
+			return *(this -= n);
 		}
 	public:/*Self*/
 		iterator_type base()const

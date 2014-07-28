@@ -8,17 +8,17 @@ namespace ztl
 {
 	// 下沉操作,当前节点不满足堆的性质,其后节点都满足
 	template<typename RandomAccessIterator, typename CompareFunctor = ztl::less<void>>inline
-		void heapify_sink(RandomAccessIterator first, RandomAccessIterator last, CompareFunctor&& comp = ztl::less<void>())
+		void heapify_sink(RandomAccessIterator first,RandomAccessIterator middle, RandomAccessIterator last, CompareFunctor&& comp = ztl::less<void>())
 	{
 			auto start = first;
-			auto target = 0;
+			auto target = distance(first,middle);
 			auto end = distance(first, last);
 			while(target < end)
 			{
 				auto offset = target;
-				auto right = (offset + 1) * 2;
-				auto left = (offset + 1) * 2 - 1;
-				if(left < end && comp(*(first + left), *(first + offset)))
+				auto right = (target + 1) * 2;
+				auto left = (target + 1) * 2 - 1;
+				if(left < end && comp(*(first + left), *(first + target)))
 				{
 					offset = left;
 				}
@@ -28,7 +28,7 @@ namespace ztl
 				}
 				if(target != offset)
 				{
-					ztl::swap(*(first + offset), *first);
+					ztl::swap(*(first + offset), *(first+target));
 					target = offset;
 				}
 				else
@@ -58,7 +58,8 @@ namespace ztl
 			auto middle = ztl::next(first, distance(first, last) / 2);
 			while(!(middle < first))
 			{
-				heapify_sink(middle, last, ztl::forward<CompareFunctor>(comp));
+				heapify_sink(first,middle, last, ztl::forward<CompareFunctor>(comp));
+				cout << endl;
 				--middle;
 			}
 	}
@@ -75,8 +76,8 @@ namespace ztl
 		void pop_heap(RandomAccessIterator first, RandomAccessIterator last,
 		CompareFunctor&& comp = ztl::less<void>())
 	{
-			ztl::swap(first, --last);
-			heapify_sink(first, last, forward<CompareFunctor>(comp));
+			ztl::swap(*first, *(--last));
+			heapify_sink(first,first, last, forward<CompareFunctor>(comp));
 	}
 	template< typename RandomAccessIterator, typename CompareFunctor = ztl::less<void>>inline
 		void heap_sort(RandomAccessIterator first, RandomAccessIterator last,
@@ -88,5 +89,7 @@ namespace ztl
 				pop_heap(first, last, binary_negate<CompareFunctor>(comp));
 				--last;
 			}
+			
 	}
+
 }

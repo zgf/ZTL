@@ -106,11 +106,16 @@ namespace ztl
 		{
 			return ztl::move(Iter + n);
 		}
+		
 		friend self_type operator-(const self_type& Iter, different_type n)
 		{
 			self_type tempIter = Iter;
 			return ztl::move(tempIter -= n);
 		}
+		/*friend different_type operator-(const self_type& left, const self_type& right)
+		{
+			return left.ptr - right.ptr;
+		}*/
 		friend self_type operator-(const different_type n, const self_type& Iter)
 		{
 			return ztl::move(Iter - n);

@@ -33,6 +33,7 @@ namespace ztl
 		{
 			return &*this;
 		}
+
 	};
 	template<typename IteratorType, typename ValueType, typename IteratorCategory, typename DifferentType = ptrdiff_t, typename PointerType = ValueType*, typename ReferenceType = ValueType&>
 	class IInputIterator :

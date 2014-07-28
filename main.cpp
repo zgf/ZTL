@@ -11,23 +11,30 @@
 using std::cout;
 using std::endl;
 #include "time/ztl_timer.h"
-//#include "test/test_string.h"
 #include "algorithm/set_algorithm.h"
 #include "algorithm/ztl_sort.h"
 #include "algorithm/ztl_heap.h"
 
 void test_heapify()
 {
+	ztl::vector<int> w{3, 1, 4, 2, 5, 9,8,13};
+	nth_element(w.begin(), w.begin() + 3, w.end());
+	/*heap_sort(w.begin(), w.end());*/
+	for_each(w.begin(), w.end(), [](int i)
+	{
+		cout << i<<" ";
+	});
+}
+void test_make_heap()
+{
 	ztl::vector<int> w{3, 1, 4, 2, 5, 9};
-	ztl::sort(w.begin(), w.end());
-	//make_heap(w.begin(), w.end());
-	ztl::for_each(w.begin(), w.end(), [](int i)
+	heap_sort(w.begin(), w.end());
+	//make_heap(w.begin(), w.end(),ztl::greater_equal<void>());
+	/*for_each(w.begin(), w.end(), [](int i)
 	{
 		cout << i;
-	});
-
+	});*/
 }
-
 
 int main()
 {
@@ -54,7 +61,7 @@ int main()
 	{
 		cout << i;
 	});*/
-
+	
 	return 0;
 }
 ////namespace ztl

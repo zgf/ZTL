@@ -99,7 +99,7 @@ namespace ztl
 
 		}
 		template<typename LeftType,typename RightType>
-		bool operator()(LeftType&& left,RightType&& right) const
+		bool operator()(LeftType&& left,RightType&& right) /*const*/
 		{
 			return !pred(ztl::forward<LeftType>(left),ztl::forward<RightType>(right));
 		}

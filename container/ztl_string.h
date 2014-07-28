@@ -133,7 +133,7 @@ namespace ztl
 		}
 		friend bool operator<= (const self_type& left, const self_type& right)
 		{
-			return !left < right;
+			return !(left < right);
 		}
 		friend bool operator>(const self_type& left, const self_type& right)
 		{
@@ -141,7 +141,7 @@ namespace ztl
 		}
 		friend bool operator>= (const self_type& left, const self_type& right)
 		{
-			return !right < left;
+			return !(right < left);
 		}
 	public:/*IEquality*/
 

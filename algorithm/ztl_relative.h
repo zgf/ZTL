@@ -192,15 +192,15 @@ namespace ztl
 	}
 	//返回三个迭代器指向的元素的中值元素的迭代器
 	template<typename ForwardIterator, typename BinaryPredicate = ztl::less<void>>inline
-		ForwardIterator middle_element(ForwardIterator first, ForwardIterator middle, ForwardIterator last, BinaryPredicate&& Pred = ztl::less<void>())
+		ForwardIterator middle_element(ForwardIterator first, ForwardIterator middle, ForwardIterator last, BinaryPredicate&& pred = ztl::less<void>())
 	{
-			if(Pred(*first, *middle))
+			if(pred(*first, *middle))
 			{
-				if(Pred(*middle, *last))
+				if(pred(*middle, *last))
 				{
 					return middle;
 				}
-				else if(Pred(*first, *last))
+				else if(pred(*first, *last))
 				{
 					return last;
 				}
@@ -211,11 +211,11 @@ namespace ztl
 			}
 			else
 			{
-				if(Pred(*last, *middle))
+				if(pred(*last, *middle))
 				{
 					return middle;
 				}
-				else if(Pred(*first, *last))
+				else if(pred(*first, *last))
 				{
 					return first;
 				}
@@ -227,11 +227,11 @@ namespace ztl
 	}
 	//三个迭代器之中的最小值
 	template<typename InputIterator, typename BinaryPredicate = ztl::less<void>>
-	InputIterator min_element(InputIterator first, InputIterator middle, InputIterator last, BinaryPredicate Pred = ztl::less<void>())
+	InputIterator min_element(InputIterator first, InputIterator middle, InputIterator last, BinaryPredicate pred = ztl::less<void>())
 	{
-		if(Pred(*first, *middle))
+		if(pred(*first, *middle))
 		{
-			if(Pred(*last, *first))
+			if(pred(*last, *first))
 			{
 				return last;
 			}
@@ -242,7 +242,7 @@ namespace ztl
 		}
 		else
 		{
-			if(Pred(*last, *middle))
+			if(pred(*last, *middle))
 			{
 				return last;
 			}

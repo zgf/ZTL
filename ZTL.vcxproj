@@ -184,12 +184,15 @@
     <ClInclude Include="algorithm\ztl_delete_copy_replace.h" />
     <ClInclude Include="algorithm\ztl_heap.h" />
     <ClInclude Include="algorithm\ztl_math.h" />
+    <ClInclude Include="algorithm\ztl_move.h" />
     <ClInclude Include="algorithm\ztl_product_mutation.h" />
     <ClInclude Include="algorithm\ztl_numeric.h" />
     <ClInclude Include="algorithm\ztl_permutation_combination.h" />
     <ClInclude Include="algorithm\ztl_relative.h" />
+    <ClInclude Include="algorithm\ztl_rotate_reverse.h" />
     <ClInclude Include="algorithm\ztl_search.h" />
     <ClInclude Include="algorithm\ztl_sort.h" />
+    <ClInclude Include="algorithm\ztl_test_seq.h" />
     <ClInclude Include="container\ztl_char_traits.h" />
     <ClInclude Include="container\ztl_dynamic_bitset.h" />
     <ClInclude Include="container\ztl_string.h" />

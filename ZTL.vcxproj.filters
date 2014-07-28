@@ -170,5 +170,14 @@
     <ClInclude Include="algorithm\ztl_heap.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="algorithm\ztl_rotate_reverse.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_move.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\ztl_test_seq.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

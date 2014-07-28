@@ -32,7 +32,7 @@ namespace ztl
 	public:
 		friend bool operator<= (const DerivedType& left, const DerivedType& right)
 		{
-			return !left < right;
+			return !(left < right);
 		}
 		friend bool operator>(const DerivedType& left, const DerivedType& right)
 		{
@@ -40,7 +40,7 @@ namespace ztl
 		}
 		friend bool operator>= (const DerivedType& left, const DerivedType& right)
 		{
-			return !right < left;
+			return !(right < left);
 		}
 	};
 }
