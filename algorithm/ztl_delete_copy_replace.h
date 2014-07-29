@@ -74,7 +74,6 @@ namespace ztl
 	template<typename ForwardIterator, typename UnaryPredicate>inline
 	ForwardIterator remove_if(ForwardIterator first, ForwardIterator last, UnaryPredicate pred)
 	{
-		auto old_first = first;
 		ztl::vector<ForwardIterator> mark_list;
 		while(first != last)
 		{
@@ -127,4 +126,5 @@ namespace ztl
 				return target == old_value;
 			});
 	}
+
 }

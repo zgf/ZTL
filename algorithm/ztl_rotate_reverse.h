@@ -33,8 +33,8 @@ namespace ztl
 			reverse_dispath(first, last, iterator_traits<BidirectionalIterator>::iterator_category());
 	}
 	/*效率不行*/
-	template<typename ForwordIter> inline
-		ForwordIter rotate_dispath(ForwordIter first, ForwordIter middle, ForwordIter last, ztl::forward_iterator)
+	template<typename ForwordIterator> inline
+		ForwordIterator rotate_dispath(ForwordIterator first, ForwordIterator middle, ForwordIterator last, ztl::forward_iterator)
 	{
 			if(first == middle || middle == last)
 			{
@@ -81,5 +81,15 @@ namespace ztl
 		BidirectionalIterator rotate(BidirectionalIterator first, BidirectionalIterator middle, BidirectionalIterator last)
 	{
 			return rotate_dispath(first, middle, last, iterator_traits<BidirectionalIterator>::iterator_category());
+	}
+
+	template<typename ForwardIterator1,typename ForwardIterator2>
+	void swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2)
+	{
+		ztl::ztl_assert_true(distance(first1, last1) != distance(first2, last2), "error! Length Range 1!= Range 2");
+		for(; first1 != last1;++first1,++first2)
+		{
+			ztl::swap(*first1, *first2);
+		}
 	}
 }

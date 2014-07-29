@@ -627,12 +627,12 @@ namespace ztl
 	}
 	/*template<class Type> inline
 		void swap(Type& left, Type& right)
-	{
-			Type temp = ztl::move(left);
+		{
+		Type temp = ztl::move(left);
 
-			left = ztl::move(right);
-			right = ztl::move(temp);
-	}*/
+		left = ztl::move(right);
+		right = ztl::move(temp);
+		}*/
 	/*判断是不是迭代器*/
 	template<class _Iter>
 	struct is_iterator

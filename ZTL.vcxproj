@@ -180,6 +180,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="algorithm\set_algorithm.h" />
+    <ClInclude Include="algorithm\unique_filter.h" />
     <ClInclude Include="algorithm\ztl_algorithm.h" />
     <ClInclude Include="algorithm\ztl_delete_copy_replace.h" />
     <ClInclude Include="algorithm\ztl_heap.h" />
