@@ -206,8 +206,8 @@ namespace ztl
 		}
 		return true;
 	}
-	template<typename BidirectionalIterator, typename BinaryPredicate = ztl::less_equal<void>>inline
-	BidirectionalIterator stable_partition(BidirectionalIterator first, BidirectionalIterator last, UnaryPredicate pred)
+	template<typename BidirectionalIterator, typename UnaryPredicate>inline
+		BidirectionalIterator stable_partition(BidirectionalIterator first, BidirectionalIterator last, UnaryPredicate&& pred)
 	{
 		auto middle = partition(first, last, forward<UnaryPredicate>(pred));
 		ztl::reverse(middle, last);

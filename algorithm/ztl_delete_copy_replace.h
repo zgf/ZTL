@@ -1,5 +1,5 @@
 #pragma once
-#include "ztl_iterator.h"
+#include "../ztl_iterator.h"
 namespace ztl
 {
 	//copy
@@ -52,7 +52,7 @@ namespace ztl
 	{
 		return ztl::copy(reverse_iterator<BidirectionalIterator1>(last), reverse_iterator<BidirectionalIterator1>(first), reverse_iterator<BidirectionalIterator2>(ztl::prev(result)));
 	}
-	template<typename InputIterator,typename OutputIterator,typename UnaryPredicate>
+	template<typename InputIterator,typename OutputIterator,typename UnaryPredicate>inline
 	OutputIterator copy_if(InputIterator first, InputIterator last, OutputIterator result, UnaryPredicate&& pred)
 	{
 		for(; first != last;++first)
@@ -65,10 +65,66 @@ namespace ztl
 		}
 		return ztl::move(result);
 	}
-	template<typename InputIterator,typename SizeType,typename OutputIterator>
+	template<typename InputIterator,typename SizeType,typename OutputIterator>inline
 	OutputIterator copy_n(InputIterator&& first, SizeType&& n, OutputIterator&& result)
 	{
 		return ztl::copy(forward<InputIterator>(first), ztl::next(forward<InputIterator>(first), n), forward<OutputIterator>(result));
 	}
+	//remove (ForwardIterator first, ForwardIterator last, const T& val)：删除序列中等于给定值的所有元素，保留的元素存放在容器的前部且相对次序不变。容器的size不变。
+	template<typename ForwardIterator, typename UnaryPredicate>inline
+	ForwardIterator remove_if(ForwardIterator first, ForwardIterator last, UnaryPredicate pred)
+	{
+		auto old_first = first;
+		ztl::vector<ForwardIterator> mark_list;
+		while(first != last)
+		{
+			if(pred(*first))
+			{
+				mark_list.push_back(first);
+			}
+			++first;
+		}
+		if (!mark_list.empty())
+		{
+			mark_list.push_back(last);
+			auto des = mark_list[0];
+			for(auto i = 1; i < mark_list.size(); i++)
+			{
+				des = ztl::copy(ztl::next(mark_list[i - 1]), mark_list[i], des);
+			}
+			return des;
+		}
+		return last;
+	}
 
+	//remove (ForwardIterator first, ForwardIterator last, const T& val)：删除序列中等于给定值的所有元素，保留的元素存放在容器的前部且相对次序不变。容器的size不变。
+	template<typename ForwardIterator, typename T>inline
+	ForwardIterator remove(ForwardIterator&& first, ForwardIterator&& last, const T& value)
+	{
+		return remove_if(ztl::forward<ForwardIterator>(first), ztl::forward<ForwardIterator>(last), [&value](const iterator_traits<ForwardIterator>::value_type& target)
+		{
+			return target == value;
+		});
+	}
+	//replace_if (ForwardIterator first, ForwardIterator last, UnaryPredicate pred, const T& new_value )：把序列中满足给定谓词pred的元素替换为新值
+	template<typename ForwardIterator, typename UnaryPredicate, typename T>inline
+		void replace_if(ForwardIterator first, ForwardIterator last, const T& new_value, UnaryPredicate pred)
+	{
+		while(first != last)
+		{
+			if (pred(*first))
+			{
+				*first = new_value;
+			}
+			++first;
+		}
+	}
+	template<typename ForwardIterator, typename T1, typename T2>inline
+		void replace(ForwardIterator&& first, ForwardIterator&& last, cont T1& old_value, const T2& new_value)
+	{
+			return replace_if(forward<ForwardIterator>(first), forward<ForwardIterator>(last), new_value,[&old_value](const ztl::iterator_traits<ForwardIterator>::value_type& target)
+			{
+				return target == old_value;
+			});
+	}
 }

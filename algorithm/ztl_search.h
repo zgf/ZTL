@@ -16,17 +16,13 @@ namespace ztl
 			return ztl::move(first);
 	}
 	template<typename InputIterator, typename T>inline
-		InputIterator find(InputIterator first, InputIterator last, const T& val)
+		InputIterator find(InputIterator&& first, InputIterator&& last, const T& value)
 	{
-			while(first != last)
+			return find_if(ztl::forward<InputIterator>(first), ztl::forward<InputIterator>(last),
+				[&value](const iterator_traits<InputIterator>::value_type& target)->bool
 			{
-				if(*first == val)
-				{
-					return first;
-				}
-				++first;
-			}
-			return ztl::move(first);
+				return target == value;
+			});
 	}
 
 	template<typename InputIterator, typename T>inline
@@ -47,8 +43,8 @@ namespace ztl
 	}
 
 	//在序列1里面找序列2第一次出现位置
-	template<typename InputIterator, typename BinaryPredicate = ztl::equal_to<void>>inline
-		InputIterator find_begin(InputIterator first1, InputIterator last1, InputIterator first2, InputIterator last2, BinaryPredicate pred = ztl::equal_to<void>())
+	template<typename InputIterator1, typename InputIterator2 typename BinaryPredicate = ztl::equal_to<void>>inline
+		InputIterator1 find_begin(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, BinaryPredicate pred = ztl::equal_to<void>())
 	{
 			for(; first1 != last1; ++first1)
 			{
@@ -78,10 +74,10 @@ namespace ztl
 			return ztl::move(last1);
 	}
 	//在序列1里面找序列2最后一次出现位置
-	template<typename InputIterator, typename BinaryPredicate = ztl::equal_to<void>>inline
-		InputIterator find_end(InputIterator first1, InputIterator last1, InputIterator first2, InputIterator last2, BinaryPredicate&& pred = ztl::equal_to<void>())
+	template<typename BidirectionalIterator1, typename BidirectionalIterator2, typename BinaryPredicate = ztl::equal_to<void>>inline
+		BidirectionalIterator2 find_end(BidirectionalIterator1 first1, BidirectionalIterator1 last1, BidirectionalIterator2 first2, BidirectionalIterator2 last2, BinaryPredicate&& pred = ztl::equal_to<void>())
 	{
-			return find_begin(reverse_iterator<InputIterator>(first1), reverse_iterator<InputIterator>(last1), reverse_iterator<InputIterator>(first2), reverse_iterator<InputIterator>(last2), forward<BinaryPredicate>(pred));
+			return find_begin(reverse_iterator<BidirectionalIterator1>(last1), reverse_iterator<BidirectionalIterator1>(first1), reverse_iterator<BidirectionalIterator2>(last2), reverse_iterator<BidirectionalIterator2>(first2), forward<BinaryPredicate>(pred));
 	}
 
 	template<typename ForwardIterator, typename BinaryPredicate == ztl::equal_to<void>>inline
@@ -102,8 +98,8 @@ namespace ztl
 			}
 	}
 	//在序列1中找到集合2任意元素第一次出现的位置
-	template<typename InputIterator, typename BinaryPredicate = ztl::equal_to<void>>inline
-		InputIterator find_first_of(InputIterator first1, InputIterator last1, InputIterator first2, InputIterator last2, BinaryPredicate&& pred = ztl::equal_to<void>())
+	template<typename InputIterator1, typename InputIterator2, typename BinaryPredicate = ztl::equal_to<void>>inline
+		InputIterator1 find_first_of(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, BinaryPredicate&& pred = ztl::equal_to<void>())
 	{
 			auto& functor = [&pred, &first1](const iterator_traits<InputIterator>::value_type& target)->bool
 			{
@@ -121,10 +117,10 @@ namespace ztl
 			return last1;
 	}
 	//在序列1中找到集合2任意元素最后第一次出现的位置
-	template<typename InputIterator, typename BinaryPredicate = ztl::equal_to<void>>inline
-		InputIterator find_last_of(InputIterator first1, InputIterator last1, InputIterator first2, InputIterator last2, BinaryPredicate&& pred = ztl::equal_to<void>())
+	template<typename BidirectionalIterator1, typename BidirectionalIterator2 typename BinaryPredicate = ztl::equal_to<void>>inline
+		BidirectionalIterator find_last_of(BidirectionalIterator1 first1, BidirectionalIterator1 last1, BidirectionalIterator2 first2, BidirectionalIterator2 last2, BinaryPredicate&& pred = ztl::equal_to<void>())
 	{
-			return find_first_of(reverse_iterator<InputIterator>(first1), reverse_iterator<InputIterator>(last1), reverse_iterator<InputIterator>(first2), reverse_iterator<InputIterator>(last2), forward<BinaryPredicate>(pred));
+			return find_first_of(reverse_iterator<BidirectionalIterator1>(last1), reverse_iterator<BidirectionalIterator1>(first1), reverse_iterator<BidirectionalIterator2>(last2), reverse_iterator<BidirectionalIterator2>(first2), forward<BinaryPredicate>(pred));
 	}
 
 	//!find_if
@@ -137,8 +133,8 @@ namespace ztl
 				(forward<UnaryPredicate>(pred)));
 	}
 	//在序列[first1,last1)中，找到序列[first2,last2)首次出现的位置
-	template<typename InputIterator, typename BinaryPredicate = ztl::equal_to<void>>inline
-		InputIterator search(InputIterator&& first1, InputIterator&& last1, InputIterator&& first2, InputIterator&& last2, BinaryPredicate&& pred = ztl::equal_to<void>())
+	template<typename InputIterator1, typename InputIterator2,typename BinaryPredicate = ztl::equal_to<void>>inline
+		InputIterator1 search(InputIterator1&& first1, InputIterator1&& last1, InputIterator2&& first2, InputIterator2&& last2, BinaryPredicate&& pred = ztl::equal_to<void>())
 	{
 			return find_begin(forward<InputIterator>(first1),
 				forward<InputIterator>(last1),

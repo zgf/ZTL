@@ -14,7 +14,7 @@ using std::endl;
 #include "algorithm/set_algorithm.h"
 #include "algorithm/ztl_sort.h"
 #include "algorithm/ztl_heap.h"
-
+#include "algorithm/ztl_delete_copy_replace.h"
 void test_heapify()
 {
 	ztl::vector<int> w{3, 1, 4, 2, 5, 9,8,13};
@@ -35,10 +35,19 @@ void test_make_heap()
 		cout << i;
 	});*/
 }
-
+void test_remove()
+{
+	ztl::vector<int> w = {0,1,2,2,3,4,2,5,2,6};
+	ztl::remove(w.begin(), w.end(), 2);
+	for_each(w.begin(), w.end(), [](int i)
+	{
+		cout << i << " ";
+	});
+}
 int main()
 {
-	test_heapify();
+	test_remove();
+	//test_heapify();
 	/*ztl::vector<int> v = {1, 0, 8, 0, 3, 5, 6,9, 9, 2};
 	ztl::vector<int> w{3, 1, 4, 1, 5, 9};
 	ztl::make_heap(w.begin(), w.end());

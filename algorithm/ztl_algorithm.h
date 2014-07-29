@@ -2,6 +2,7 @@
 #include "../type/ztl_type_traits.h"
 #include "../iterator/iterator_traits.h"
 #include "ztl_math.h"
+#include "ztl_rotate_reverse.h"
 namespace ztl
 {
 //#undef max

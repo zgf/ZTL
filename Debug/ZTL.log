@@ -1,9 +1,9 @@
-﻿生成启动时间为 7/27/2014 10:00:00 PM。
+﻿生成启动时间为 7/29/2014 4:30:15 PM。
      1>项目“F:\MyProjects\ZTL\ZTL\ZTL.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /FR"Debug\\" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /FR"Debug\\" /Gd /TP /analyze- /errorReport:prompt main.cpp memory\ztl_buddy_memory_allocator.cpp
          main.cpp
-     1>f:\myprojects\ztl\ztl\algorithm\ztl_sort.h(170): warning C4239: 使用了非标准扩展:“初始化”: 从“ztl::vector_iterator<int>”转换到“ztl::vector_iterator<int> &”
+     1>f:\myprojects\ztl\ztl\algorithm\ztl_sort.h(171): warning C4239: 使用了非标准扩展:“初始化”: 从“ztl::vector_iterator<int>”转换到“ztl::vector_iterator<int> &”
                  非常量引用只能绑定到左值
                  f:\myprojects\ztl\ztl\main.cpp(21): 参见对正在编译的函数 模板 实例化“void ztl::nth_element<ztl::vector_iterator<int>,ztl::less_equal<void>>(BidirectionalIterator,BidirectionalIterator,BidirectionalIterator,BinaryPredicate &&)”的引用
                  with
@@ -11,9 +11,9 @@
                      BidirectionalIterator=ztl::vector_iterator<int>
          ,            BinaryPredicate=ztl::less_equal<void>
                  ]
-     1>f:\myprojects\ztl\ztl\algorithm\ztl_sort.h(54): warning C4239: 使用了非标准扩展:“初始化”: 从“ztl::vector_iterator<int>”转换到“ztl::vector_iterator<int> &”
+     1>f:\myprojects\ztl\ztl\algorithm\ztl_sort.h(134): warning C4239: 使用了非标准扩展:“初始化”: 从“ztl::vector_iterator<int>”转换到“ztl::vector_iterator<int> &”
                  非常量引用只能绑定到左值
-                 f:\myprojects\ztl\ztl\algorithm\ztl_sort.h(170): 参见对正在编译的函数 模板 实例化“BidirectionalIterator ztl::chose_pivot<BidirectionalIterator,Type>(BidirectionalIterator,BidirectionalIterator,BinaryPredicate &&)”的引用
+                 f:\myprojects\ztl\ztl\algorithm\ztl_sort.h(171): 参见对正在编译的函数 模板 实例化“BidirectionalIterator ztl::chose_pivot<BidirectionalIterator,Type>(BidirectionalIterator,BidirectionalIterator,BinaryPredicate &&)”的引用
                  with
                  [
                      BidirectionalIterator=ztl::vector_iterator<int>
@@ -26,6 +26,11 @@
                      BidirectionalIterator=ztl::vector_iterator<int>
          ,            BinaryPredicate=ztl::less_equal<void>
                  ]
+         正在生成代码...
+         正在编译...
+         ztl_buddy_memory_allocator.cpp
+     1>f:\myprojects\ztl\ztl\memory\ztl_buddy_memory_allocator.cpp(50): warning C4127: 条件表达式是常量
+         正在生成代码...
        Link:
          E:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\MyProjects\ZTL\Debug\ZTL.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\MyProjects\ZTL\Debug\ZTL.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE:NO /NXCOMPAT /IMPLIB:"F:\MyProjects\ZTL\Debug\ZTL.lib" /MACHINE:X86 /PROFILE Debug\ztl_deque.obj
          Debug\main.obj
@@ -40,4 +45,4 @@
 
 生成成功。
 
-已用时间 00:00:08.93
+已用时间 00:00:08.87
