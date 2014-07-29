@@ -1,4 +1,5 @@
 #pragma once
+#include "ztl_iterator.h"
 namespace ztl
 {
 	//copy
@@ -45,4 +46,29 @@ namespace ztl
 		memmove(des, start, (end - start)*sizeof(char));
 		return ztl::move(des + (end - start));
 	}
+	//result是新区间的超尾
+	template<typename BidirectionalIterator1,typename BidirectionalIterator2>inline
+	BidirectionalIterator2 copy_backward(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 result)
+	{
+		return ztl::copy(reverse_iterator<BidirectionalIterator1>(last), reverse_iterator<BidirectionalIterator1>(first), reverse_iterator<BidirectionalIterator2>(ztl::prev(result)));
+	}
+	template<typename InputIterator,typename OutputIterator,typename UnaryPredicate>
+	OutputIterator copy_if(InputIterator first, InputIterator last, OutputIterator result, UnaryPredicate&& pred)
+	{
+		for(; first != last;++first)
+		{
+			if (pred(first))
+			{
+				*result = *first;
+				++result;
+			}
+		}
+		return ztl::move(result);
+	}
+	template<typename InputIterator,typename SizeType,typename OutputIterator>
+	OutputIterator copy_n(InputIterator&& first, SizeType&& n, OutputIterator&& result)
+	{
+		return ztl::copy(forward<InputIterator>(first), ztl::next(forward<InputIterator>(first), n), forward<OutputIterator>(result));
+	}
+
 }
