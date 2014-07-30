@@ -1,6 +1,5 @@
 #pragma once
-#include "../algorithm/ztl_product_mutation.h"
-#include "../algorithm/ztl_delete_copy_replace.h"
+#include "../algorithm/ztl_algorithm.h"
 namespace ztl
 {
 

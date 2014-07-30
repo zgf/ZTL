@@ -1,7 +1,7 @@
 #pragma once
 #include "../memory/ztl_allocator.h"
-#include "../concept/ztl_container_concept.h"
 #include "../ztl_iterator.h"
+#include "../log/ztl_log.h"
 namespace ztl
 {
 	/*自动递增内存块,当内存重分配时,会导致迭代器失效*/

@@ -1,5 +1,5 @@
 #pragma once
-#include "concept/ztl_base_concept.h"
+#include "../concept/ztl_base_concept.h"
 namespace ztl
 {
 	template<typename FirstType, typename SecondType>

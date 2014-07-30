@@ -11,10 +11,8 @@
 using std::cout;
 using std::endl;
 #include "time/ztl_timer.h"
-#include "algorithm/set_algorithm.h"
-#include "algorithm/ztl_sort.h"
-#include "algorithm/ztl_heap.h"
-#include "algorithm/ztl_delete_copy_replace.h"
+#include "algorithm/ztl_algorithm.h"
+#include "test/help_test.h"
 void test_heapify()
 {
 	ztl::vector<int> w{3, 1, 4, 2, 5, 9,8,13};

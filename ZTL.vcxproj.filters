@@ -137,49 +137,10 @@
     <ClInclude Include="random\ztl_random.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="algorithm\ztl_search.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\ztl_sort.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\ztl_permutation_combination.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\ztl_relative.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="functional\ztl_operator_functor.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="algorithm\ztl_numeric.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\ztl_product_mutation.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\ztl_delete_copy_replace.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\ztl_math.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\set_algorithm.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\ztl_heap.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\ztl_rotate_reverse.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\ztl_move.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\ztl_test_seq.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm\unique_filter.h">
+    <ClInclude Include="test\help_test.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
